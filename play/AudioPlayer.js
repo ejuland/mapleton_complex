@@ -51,8 +51,11 @@ export class AudioAssetPlayer {
     stepCount = 0;
 
     playStep() {
-        console.log("PlayStep!");
         this.playAudioAsset(this.assets.steps[0]).then(audio => {
+            console.log("PlayStep!");
+            audio.onended = ()=>{
+                window.alert("Finished!");
+            }
             audio.start(0);
         }).catch(console.error);
     }

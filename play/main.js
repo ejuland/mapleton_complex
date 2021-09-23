@@ -9,6 +9,10 @@ import { Render } from "./render.js";
 import { AudioAssetPlayer } from "./AudioPlayer.js";
 import { Character } from "./character.js";
 import Game from "./Game.js"
+
+if('serviceWorker' in navigator)
+    navigator.serviceWorker.register('./service.js');
+
 let oldSession = null;
 function startLevel(num = 1) {
     let session = new Game([], num, () => {
