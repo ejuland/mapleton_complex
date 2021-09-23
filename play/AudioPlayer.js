@@ -4,7 +4,6 @@ const audioContext = new AudioContext();
 import { getRandomNumber } from "./MazeGen.js";
 export class AudioAssetPlayer {
     assets = {
-        background: ["background_music_2.mp3", "background_music_3.mp3", "background_music_4.mp3"],
         steps: ["step1.mp3", "step2.mp3"],
         ambient: [
             "something coming 1.mp3",
@@ -42,7 +41,7 @@ export class AudioAssetPlayer {
             "thing_step_1.mp3",// 6
             "thing_step_2.mp3",// 7
         ],
-        elevator:["bell_chime.mp3", "elevator_down.mp3"],
+        elevator: ["bell_chime.mp3", "elevator_down.mp3"],
         character: ["player_breath.mp3"],
         item: ["item aquired.mp3", "strobe.mp3", "strobeEnd.mp3", "item dropped.mp3"],
         puzzel: ["puzzel.mp3"],
@@ -81,15 +80,16 @@ export class AudioAssetPlayer {
         };
 
         let playsound = () => {
-            let audio = this.createSourceFromBuffer(getSoundFromSoundPool(), .3)
-            audio.start(0);
-            audio.addEventListener('ended', () => {
-                if (this.shouldPlayBackground){
-                    soundPool = [];
-                    populateSoundPool();
-                }
+            this.createSourceFromBuffer(getSoundFromSoundPool(), .3).then(audio => {
+                audio.start(0);
+                audio.addEventListener('ended', () => {
+                    if (this.shouldPlayBackground) {
+                        soundPool = [];
+                        populateSoundPool();
+                    }
                     setTimeout(playsound, 30000);
-            }, false);
+                }, false);
+            });
         }
 
         playsound();
@@ -103,46 +103,52 @@ export class AudioAssetPlayer {
     playComing(callback, index = -1, volume = .3) {
         if (index < 0)
             index = Math.floor(Math.random() * this.assets.coming.length);
-        let audio = this.createSourceFromBuffer(this.assets.coming[index], volume)
-        audio.start(0);
-        if (callback)
-            audio.addEventListener('ended', callback, false);
+        this.createSourceFromBuffer(this.assets.coming[index], volume).then(audio => {
+            audio.start(0);
+            if (callback)
+                audio.addEventListener('ended', callback, false);
+        });
     }
 
 
     playThingBreath(callback, volume = .6) {
-        let audio = this.createSourceFromBuffer(this.assets.thing[1], volume)
-        audio.start(0);
-        if (callback)
-            audio.addEventListener('ended', callback, false);
+        this.createSourceFromBuffer(this.assets.thing[1], volume).then(audio => {
+            audio.start(0);
+            if (callback)
+                audio.addEventListener('ended', callback, false);
+        });
     }
-    
+
     playChime(callback, volume = .6) {
-        let audio = this.createSourceFromBuffer(this.assets.elevator[0], volume)
-        audio.start(0);
-        if (callback)
-            audio.addEventListener('ended', callback, false);
+        this.createSourceFromBuffer(this.assets.elevator[0], volume).then(audio => {
+            audio.start(0);
+            if (callback)
+                audio.addEventListener('ended', callback, false);
+        });
     }
     playElevatorDown(callback, volume = .6) {
-        let audio = this.createSourceFromBuffer(this.assets.elevator[1], volume)
-        audio.start(0);
-        if (callback)
-            audio.addEventListener('ended', callback, false);
+        this.createSourceFromBuffer(this.assets.elevator[1], volume).then(audio => {
+            audio.start(0);
+            if (callback)
+                audio.addEventListener('ended', callback, false);
+        });
     }
 
     playThingSqueal(callback, volume = .6) {
-        let audio = this.createSourceFromBuffer(this.assets.thing[5], volume)
-        audio.start(0);
-        if (callback)
-            audio.addEventListener('ended', callback, false);
+        this.createSourceFromBuffer(this.assets.thing[5], volume).then(audio => {
+            audio.start(0);
+            if (callback)
+                audio.addEventListener('ended', callback, false);
+        });
     }
 
     playThingRoar(index = 0, volume = .6, callback) {
 
-        let audio = this.createSourceFromBuffer(this.assets.thing[2 + index], volume)
-        audio.start(0);
-        if (callback)
-            audio.addEventListener('ended', callback, false);
+        this.createSourceFromBuffer(this.assets.thing[2 + index], volume).then(audio => {
+            audio.start(0);
+            if (callback)
+                audio.addEventListener('ended', callback, false);
+        });
     }
 
     playingPuzzel = false;
@@ -150,49 +156,55 @@ export class AudioAssetPlayer {
         if (this.playingPuzzel)
             return false;
         this.playingPuzzel = true;
-        let audio = this.createSourceFromBuffer(this.assets.puzzel[0], .1)
-        audio.start(0, 0, 3);
-        audio.addEventListener('ended', () => {
-            setTimeout(() => {
-                if (callback)
-                    callback();
-                this.playingPuzzel = false;
-            }, 5 * 1000)
-        }, false);
+        this.createSourceFromBuffer(this.assets.puzzel[0], .1).then(audio => {
+            audio.start(0, 0, 3);
+            audio.addEventListener('ended', () => {
+                setTimeout(() => {
+                    if (callback)
+                        callback();
+                    this.playingPuzzel = false;
+                }, 5 * 1000)
+            }, false);
+        });
     }
 
     playItIsHere(stage1, stage2, stage3, done) {
         console.log("YOLO", this.assets.thing);
-        let audio = this.createSourceFromBuffer(this.assets.thing[0], .2)
-        audio.start(0, 0, 3);
-        this.playThingBreath();
-        this.playThingRoar();
-        stage1();
-        setTimeout(() => {
-            if (stage2)
-                stage2();
-            audio = this.createSourceFromBuffer(this.assets.thing[0], .4)
-            audio.start(0, 4.5, 3)
+        this.createSourceFromBuffer(this.assets.thing[0], .2).then(audio => {
+            audio.start(0, 0, 3);
             this.playThingBreath();
-            this.playThingRoar(1, 1.5);
+            this.playThingRoar();
+            stage1();
             setTimeout(() => {
-                let shouldContinue = true;
-                if (stage3)
-                    shouldContinue = stage3();
-                if (shouldContinue) {
+                if (stage2)
+                    stage2();
+                createSourceFromBuffer(this.assets.thing[0], .4).then(audio => {
+
+                    audio.start(0, 4.5, 3)
                     this.playThingBreath();
-                    audio = this.createSourceFromBuffer(this.assets.thing[0], .8)
-                    audio.start(0, 9.5)
-                    this.playThingRoar(2, 2);
+                    this.playThingRoar(1, 1.5);
                     setTimeout(() => {
-                        if (done)
-                            done();
-                    }, 2000)
-                } else
-                    if (done)
-                        done();
+                        let shouldContinue = true;
+                        if (stage3)
+                            shouldContinue = stage3();
+                        if (shouldContinue) {
+                            this.playThingBreath();
+                            createSourceFromBuffer(this.assets.thing[0], .8).then(audio => {
+
+                                audio.start(0, 9.5)
+                                this.playThingRoar(2, 2);
+                                setTimeout(() => {
+                                    if (done)
+                                        done();
+                                }, 2000)
+                            });
+                        } else
+                            if (done)
+                                done();
+                    }, 3000)
+                });
             }, 3000)
-        }, 3000)
+        });
     }
 
     shouldPlayAmbientSound = true;
@@ -212,14 +224,15 @@ export class AudioAssetPlayer {
         let setSoundDelay = () => {
             if (this.shouldPlayAmbientSound) {
                 this.shouldPlayAmbientSound = false;
-                let audio = this.createSourceFromBuffer(getSound(), .3);
-                audio.addEventListener('ended', () => {
-                    setTimeout(() => {
-                        this.shouldPlayAmbientSound = true;
-                        audio.start(0);
-                        //setSoundDelay();
-                    }, 30 * 1000);
-                }, false);
+                this.createSourceFromBuffer(getSound(), .3).then(audio => {
+                    audio.addEventListener('ended', () => {
+                        setTimeout(() => {
+                            this.shouldPlayAmbientSound = true;
+                            audio.start(0);
+                            //setSoundDelay();
+                        }, 30 * 1000);
+                    }, false);
+                });
             };
 
 
@@ -240,16 +253,18 @@ export class AudioAssetPlayer {
         }
         this.breathing = true;
         if (times > 0) {
-            let audio = this.createSourceFromBuffer(this.assets.character[0], .1)
-            audio.start(0);
-            audio.addEventListener('ended', () => {
-                this.breathing = false;
-                let breathsLeft = (times - 1) + this.additionalBreaths;
-                this.additionalBreaths = 0;
-                this.playPlayerBreath(breathsLeft, callback);
+            this.createSourceFromBuffer(this.assets.character[0], .1).then(audio => {
 
-            }, false);
-        } else{
+                audio.start(0);
+                audio.addEventListener('ended', () => {
+                    this.breathing = false;
+                    let breathsLeft = (times - 1) + this.additionalBreaths;
+                    this.additionalBreaths = 0;
+                    this.playPlayerBreath(breathsLeft, callback);
+
+                }, false);
+            });
+        } else {
             this.breathing = false;
             callback();
         }
@@ -259,32 +274,36 @@ export class AudioAssetPlayer {
 
     playPickup() {
         //this.assets.steps[this.stepNumber].volume = 1;
-        let audio = this.createSourceFromBuffer(this.assets.item[0], .1)
-        audio.start(0);
+        this.createSourceFromBuffer(this.assets.item[0], .1).then(audio => {
+            audio.start(0);
+        });
     }
     playDrop() {
         //this.assets.steps[this.stepNumber].volume = 1;
-        let audio = this.createSourceFromBuffer(this.assets.item[3], .3)
-        audio.start(0);
+        this.createSourceFromBuffer(this.assets.item[3], .3).then(audio => {
+            audio.start(0);
+        });
     }
     playTear() {
         //this.assets.steps[this.stepNumber].volume = 1;
-        let audio = this.createSourceFromBuffer(this.assets.map[0], .3)
-        audio.start(0);
+        this.createSourceFromBuffer(this.assets.map[0], .3).then(audio => {
+            audio.start(0);
+        });
     }
 
     strobPlaying = false;
     playStrobe(callback) {
         if (!this.strobPlaying) {
             this.strobPlaying = true;
-            let audio = this.createSourceFromBuffer(this.assets.item[1], 1)
-            audio.start(0);
-            audio.addEventListener('ended', () => {
-                this.strobPlaying = false;
-                if (callback)
-                    callback();
+            this.createSourceFromBuffer(this.assets.item[1], 1).then(audio => {
+                audio.start(0);
+                audio.addEventListener('ended', () => {
+                    this.strobPlaying = false;
+                    if (callback)
+                        callback();
 
-            }, false);
+                }, false);
+            });
         }
     }
 
@@ -292,8 +311,9 @@ export class AudioAssetPlayer {
         if (this.stepNumber >= this.assets.steps.length)
             this.stepNumber = 0;
         //this.assets.steps[this.stepNumber].volume = 1;
-        let audio = this.createSourceFromBuffer(this.assets.steps[this.stepNumber], .1)
-        audio.start(0);
+        this.createSourceFromBuffer(this.assets.steps[this.stepNumber], .1).then(audio => {
+            audio.start(0);
+        });
         this.stepNumber++;
     }
     stepThingNumber = 0;
@@ -305,23 +325,28 @@ export class AudioAssetPlayer {
         if (this.stepThingNumber > 1)
             this.stepThingNumber = 0;
         //this.assets.steps[this.stepNumber].volume = 1;
-        let audio = this.createSourceFromBuffer(this.assets.thing[6 + this.stepNumber], volume)
-        audio.addEventListener('ended', () => {
-            this.thingStepPlaying = false;
-        }, false);
-        audio.start(0);
+        this.createSourceFromBuffer(this.assets.thing[6 + this.stepNumber], volume).then(audio => {
+
+            audio.addEventListener('ended', () => {
+                this.thingStepPlaying = false;
+            }, false);
+            audio.start(0);
+        });
         this.stepThingNumber++;
     }
 
     createSourceFromBuffer(buffer, volume = 1) {
-        let source = audioContext.createBufferSource();
-        source.buffer = buffer;
-        let gainNode = audioContext.createGain();
-        gainNode.gain.value = volume;
-        gainNode.connect(audioContext.destination);
-        source.connect(gainNode);
-        source.loop = false;
-        return source;
+        return this.loadAudioBuffer("./SFX/" + buffer, "", 0).then(buff => {
+            let buffer = buff.buffer;
+            let source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            let gainNode = audioContext.createGain();
+            gainNode.gain.value = volume;
+            gainNode.connect(audioContext.destination);
+            source.connect(gainNode);
+            source.loop = false;
+            return Promise.resolve(source);
+        })
     }
 
     loadAudioBuffer(url, asset, index) {
@@ -353,23 +378,6 @@ export class AudioAssetPlayer {
     }
 
     constructor(callback) {
-        let sounds = [];
-        for (var asset in this.assets) {
-            for (let index in this.assets[asset])
-                sounds.push(this.loadAudioBuffer("./SFX/" + this.assets[asset][index], asset, index));
-
-            // this.assets[asset].forEach(asset=>{
-            //     //asset.volume = 0;
-            //     asset.play();
-            // });
-        }
-        Promise.all(sounds).then(buffers => {
-            buffers.forEach((data) => {
-                this.assets[data.asset][data.index] = data.buffer;
-            });
-            if (callback)
-                callback();
-        });
     }
 
 
