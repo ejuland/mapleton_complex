@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .d-pad {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+            grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+            width: 200px;
+            height: 200px;
+            padding: 0;
+            margin: 0;
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+        }
+
+        .d-pad img {
+            width: 100%;
+            height: 100%;
+            opacity: .5;
+        }
+
+        .up {
+            grid-row-start: 1;
+            grid-row-end: 2;
+            grid-column-start: 2;
+            grid-column-end: 3;
+        }
+
+        .left {
+            grid-row-start: 2;
+            grid-row-end: 3;
+            grid-column-start: 1;
+            grid-column-end: 2;
+        }
+
+        .right {
+            grid-row-start: 2;
+            grid-row-end: 3;
+            grid-column-start: 3;
+            grid-column-end: -1;
+        }
+
+        .down {
+            grid-row-start: 3;
+            grid-row-end: -1;
+            grid-column-start: 2;
+            grid-column-end: 3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>D-Pad</h1>
+    <script>
+        function makePromise(num) {
+            return Promise.resolve(num);
+        }
+
+        let lastPromise = makePromise(0);
+        let running = true;
+        for (let i = 0; i < 20 && running; i++) {
+            let p = makePromise(i + 1);
+            lastPromise.then((res) => {
+                let seconds = Math.floor(Math.random() * 10) + 1
+                if (seconds == 10){
+                    running = false;
+                    return Promise.reject("Too much bruh");
+                }
+
+                console.log(res);
+                return p;
+
+            })
+            lastPromise = p;
+        }
+
+        console.log("test1");
+    </script>
+</body>
+
+</html>
