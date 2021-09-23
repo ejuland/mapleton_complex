@@ -9,14 +9,9 @@ import { Render } from "./render.js";
 import { AudioAssetPlayer } from "./AudioPlayer.js";
 import { Character } from "./character.js";
 import Game from "./Game.js"
-const AudioMixer = new AudioAssetPlayer();
-
 let oldSession = null;
 function startLevel(num = 1) {
-    let p1 = new Character(AudioMixer);
-    let session = new Game(p1, [], num, AudioMixer, () => {
-        AudioMixer.soundLevel = num;
-        AudioMixer.shouldPlayBackground = true;
+    let session = new Game([], num, () => {
         startLevel(num + 1);
     }, () => {
         setTimeout(() => {
@@ -27,5 +22,7 @@ function startLevel(num = 1) {
     oldSession = session;
 }
 startLevel();
+
+
 
 //This is a huge change

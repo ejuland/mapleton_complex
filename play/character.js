@@ -76,7 +76,8 @@ export class Character {
         let newPos = this.headInDirection(this.compass[Maze.North], false);
         if (this.getAvaliablePaths()[this.compass[Maze.North]] && this.maze.isValidCoord(newPos.x, newPos.y)) {
             this.headInDirection(this.compass[Maze.North]);
-            this.AudioMixer.playStep();
+            if (this.AudioMixer)
+                this.AudioMixer.playStep();
             this.stepCount++;
         } else
             console.log("Cant go there buddy");
@@ -86,7 +87,8 @@ export class Character {
         if (this.getAvaliablePaths()[this.compass[Maze.South]] && this.maze.isValidCoord(newPos.x, newPos.y)) {
             this.headInDirection(this.compass[Maze.South])
             this.changeOrientation(Back);
-            this.AudioMixer.playStep();
+            if (this.AudioMixer)
+                this.AudioMixer.playStep();
             this.stepCount++;
         } else
             console.log("Cant go there buddy");
@@ -96,7 +98,8 @@ export class Character {
         if (this.getAvaliablePaths()[this.compass[Maze.West]] && this.maze.isValidCoord(newPos.x, newPos.y)) {
             this.headInDirection(this.compass[Maze.West]);
             this.changeOrientation(LEFT);
-            this.AudioMixer.playStep();
+            if (this.AudioMixer)
+                this.AudioMixer.playStep();
             this.stepCount++;
         } else
             console.log("Cant go there buddy");
@@ -107,7 +110,8 @@ export class Character {
         if (this.getAvaliablePaths()[this.compass[Maze.East]] && this.maze.isValidCoord(newPos.x, newPos.y)) {
             this.headInDirection(this.compass[Maze.East]);
             this.changeOrientation(RIGHT);
-            this.AudioMixer.playStep();
+            if (this.AudioMixer)
+                this.AudioMixer.playStep();
             this.stepCount++;
         } else
             console.log("Cant go there buddy");
@@ -307,10 +311,7 @@ export class Character {
                     default:
                 }
             }
-            this.moveLeft()
-            this.moveRight()
-            this.moveDown();
-            this.moveUp()
+
         } else {
         }
     }
@@ -327,7 +328,7 @@ export class Character {
     mapType = 0;
     superMaps = 0;
     render(framesPassed, CTX, screen) {
-        
+
     }
 
     map = null;
@@ -339,8 +340,10 @@ export class Character {
 
     }
     AudioMixer
-    constructor(AudioMixer) {
-        this.AudioMixer = AudioMixer;
+    setAudioMixer(mix) {
+        this.AudioMixer = mix;
+    }
+    constructor() {
         this.compass[Maze.North] = Maze.North;
         this.compass[Maze.South] = Maze.South;
         this.compass[Maze.East] = Maze.East;

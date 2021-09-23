@@ -69,6 +69,9 @@ import * as Puzzels from "./puzzelmanager.js";
 import * as Items from "./items.js"
 import { Render } from "./render.js";
 import { THING } from "./Thing.js";
+import { Character } from "./character.js";
+import { AudioAssetPlayer } from "./AudioPlayer.js";
+
 export default class Game {
     SCREEN = document.querySelector("#screen");
     SCREEN2 = document.querySelector("#action_screen");
@@ -462,19 +465,18 @@ export default class Game {
 
 
     // }
-    AudioMixer = null;
     RenderEngine = new Render();
-    constructor(player1, otherPlayers = [], num, AudioMixer, win, loose) {
+    constructor(otherPlayers = [], num, win, loose) {
+        
 
-        this.AudioMixer = AudioMixer;
         this.res = win;
         this.rej = loose;
         let started = false;
         this.levelNum = num;
         this.RenderEngine.level = this.levelNum;
         let Game = this;
-        this.player1 = player1;
-        this.allPlayers = [player1].concat(...otherPlayers);
+        this.player1 = new Character();
+        this.allPlayers = [this.player1].concat(...otherPlayers);
         let levelDat = {
             players: this.allPlayers.length,
             level: this.levelNum
@@ -491,6 +493,10 @@ export default class Game {
 
         let start = (() => {
             if (!started) {
+                this.AudioMixer = new AudioAssetPlayer();
+                this.player1.setAudioMixer(this.AudioMixer);
+                this.AudioMixer.playStep();
+                return;
                 started = true;
 
                 this.RenderEngine.renderFlashLight(this.CTX, { height: this.HEIGHT, width: this.WIDTH, pX: this.pointerX, pY: this.pointerY }, false)

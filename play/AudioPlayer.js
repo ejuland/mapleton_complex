@@ -1,9 +1,8 @@
 
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioContext = new AudioContext();
 import { getRandomNumber } from "./MazeGen.js";
 export class AudioAssetPlayer {
     assets = {
+        background: ["background_music_2.mp3", "background_music_3.mp3", "background_music_4.mp3"],
         steps: ["step1.mp3", "step2.mp3"],
         ambient: [
             "something coming 1.mp3",
@@ -48,325 +47,45 @@ export class AudioAssetPlayer {
         map: ["map_tear.mp3"]
     };
 
-    shouldPlayBackground = true;
-    soundLevel = 0;
-    playBackground() {
-        if (!this.shouldPlayBackground)
-            return false;
-        this.shouldPlayBackground = false;
-        console.log("Play Background!");
-        let soundPool = [];
-        let soundLevel = this.soundLevel;
-        console.log(soundLevel);
-        let populateSoundPool = () => {
-            console.log(soundLevel);
-            soundPool = soundPool.concat(...this.assets.coming);
-            if (soundLevel > 1)
-                soundPool = soundPool.concat(...this.assets.ambient);
-            if (soundLevel >= 3)
-                soundPool = soundPool.concat(...this.assets.music);
-            if (soundLevel > 5)
-                soundPool = soundPool.concat(...this.assets.endgame);
-        };
 
-        let getSoundFromSoundPool = () => {
-            if (soundPool.length <= 0)
-                populateSoundPool();
-            let assetIndex = getRandomNumber(soundPool.length);
-            let asset = soundPool[assetIndex];
-            console.log(asset);
-            soundPool.splice(assetIndex, 1);
-            return asset;
-        };
-
-        let playsound = () => {
-            this.createSourceFromBuffer(getSoundFromSoundPool(), .3).then(audio => {
-                audio.start(0);
-                audio.addEventListener('ended', () => {
-                    if (this.shouldPlayBackground) {
-                        soundPool = [];
-                        populateSoundPool();
-                    }
-                    setTimeout(playsound, 30000);
-                }, false);
-            });
-        }
-
-        playsound();
-    }
-
-    killBackgroundMusic() {
-
-        this.shouldPlayBackground = false;
-    }
-
-    playComing(callback, index = -1, volume = .3) {
-        if (index < 0)
-            index = Math.floor(Math.random() * this.assets.coming.length);
-        this.createSourceFromBuffer(this.assets.coming[index], volume).then(audio => {
-            audio.start(0);
-            if (callback)
-                audio.addEventListener('ended', callback, false);
-        });
-    }
-
-
-    playThingBreath(callback, volume = .6) {
-        this.createSourceFromBuffer(this.assets.thing[1], volume).then(audio => {
-            audio.start(0);
-            if (callback)
-                audio.addEventListener('ended', callback, false);
-        });
-    }
-
-    playChime(callback, volume = .6) {
-        this.createSourceFromBuffer(this.assets.elevator[0], volume).then(audio => {
-            audio.start(0);
-            if (callback)
-                audio.addEventListener('ended', callback, false);
-        });
-    }
-    playElevatorDown(callback, volume = .6) {
-        this.createSourceFromBuffer(this.assets.elevator[1], volume).then(audio => {
-            audio.start(0);
-            if (callback)
-                audio.addEventListener('ended', callback, false);
-        });
-    }
-
-    playThingSqueal(callback, volume = .6) {
-        this.createSourceFromBuffer(this.assets.thing[5], volume).then(audio => {
-            audio.start(0);
-            if (callback)
-                audio.addEventListener('ended', callback, false);
-        });
-    }
-
-    playThingRoar(index = 0, volume = .6, callback) {
-
-        this.createSourceFromBuffer(this.assets.thing[2 + index], volume).then(audio => {
-            audio.start(0);
-            if (callback)
-                audio.addEventListener('ended', callback, false);
-        });
-    }
-
-    playingPuzzel = false;
-    playPuzzelOn(callback) {
-        if (this.playingPuzzel)
-            return false;
-        this.playingPuzzel = true;
-        this.createSourceFromBuffer(this.assets.puzzel[0], .1).then(audio => {
-            audio.start(0, 0, 3);
-            audio.addEventListener('ended', () => {
-                setTimeout(() => {
-                    if (callback)
-                        callback();
-                    this.playingPuzzel = false;
-                }, 5 * 1000)
-            }, false);
-        });
-    }
-
-    playItIsHere(stage1, stage2, stage3, done) {
-        console.log("YOLO", this.assets.thing);
-        this.createSourceFromBuffer(this.assets.thing[0], .2).then(audio => {
-            audio.start(0, 0, 3);
-            this.playThingBreath();
-            this.playThingRoar();
-            stage1();
-            setTimeout(() => {
-                if (stage2)
-                    stage2();
-                createSourceFromBuffer(this.assets.thing[0], .4).then(audio => {
-
-                    audio.start(0, 4.5, 3)
-                    this.playThingBreath();
-                    this.playThingRoar(1, 1.5);
-                    setTimeout(() => {
-                        let shouldContinue = true;
-                        if (stage3)
-                            shouldContinue = stage3();
-                        if (shouldContinue) {
-                            this.playThingBreath();
-                            createSourceFromBuffer(this.assets.thing[0], .8).then(audio => {
-
-                                audio.start(0, 9.5)
-                                this.playThingRoar(2, 2);
-                                setTimeout(() => {
-                                    if (done)
-                                        done();
-                                }, 2000)
-                            });
-                        } else
-                            if (done)
-                                done();
-                    }, 3000)
-                });
-            }, 3000)
-        });
-    }
-
-    shouldPlayAmbientSound = true;
-    current
-    startAmbientSoundLoop() {
-
-        let lastPlayed = -1;
-        let getSound = () => {
-            let soundNumber = 0;
-            do {
-                soundNumber = Math.floor(Math.random() * this.assets.ambient.length);
-            } while (soundNumber == lastPlayed);
-            lastPlayed = soundNumber;
-            return this.assets.ambient[soundNumber];
-        };
-
-        let setSoundDelay = () => {
-            if (this.shouldPlayAmbientSound) {
-                this.shouldPlayAmbientSound = false;
-                this.createSourceFromBuffer(getSound(), .3).then(audio => {
-                    audio.addEventListener('ended', () => {
-                        setTimeout(() => {
-                            this.shouldPlayAmbientSound = true;
-                            audio.start(0);
-                            //setSoundDelay();
-                        }, 30 * 1000);
-                    }, false);
-                });
-            };
-
-
-        }
-        setTimeout(setSoundDelay, 30000);
-    }
-
-    killAmbientSoundLoop() {
-        this.shouldPlayAmbientSound = false;
-    }
-
-    breathing = false;
-    additionalBreaths = 0;
-    playPlayerBreath(times = 1, callback) {
-        if (this.breathing) {
-            this.additionalBreaths++;
-            return;
-        }
-        this.breathing = true;
-        if (times > 0) {
-            this.createSourceFromBuffer(this.assets.character[0], .1).then(audio => {
-
-                audio.start(0);
-                audio.addEventListener('ended', () => {
-                    this.breathing = false;
-                    let breathsLeft = (times - 1) + this.additionalBreaths;
-                    this.additionalBreaths = 0;
-                    this.playPlayerBreath(breathsLeft, callback);
-
-                }, false);
-            });
-        } else {
-            this.breathing = false;
-            callback();
-        }
-    }
-
-    stepNumber = 0;
-
-    playPickup() {
-        //this.assets.steps[this.stepNumber].volume = 1;
-        this.createSourceFromBuffer(this.assets.item[0], .1).then(audio => {
-            audio.start(0);
-        });
-    }
-    playDrop() {
-        //this.assets.steps[this.stepNumber].volume = 1;
-        this.createSourceFromBuffer(this.assets.item[3], .3).then(audio => {
-            audio.start(0);
-        });
-    }
-    playTear() {
-        //this.assets.steps[this.stepNumber].volume = 1;
-        this.createSourceFromBuffer(this.assets.map[0], .3).then(audio => {
-            audio.start(0);
-        });
-    }
-
-    strobPlaying = false;
-    playStrobe(callback) {
-        if (!this.strobPlaying) {
-            this.strobPlaying = true;
-            this.createSourceFromBuffer(this.assets.item[1], 1).then(audio => {
-                audio.start(0);
-                audio.addEventListener('ended', () => {
-                    this.strobPlaying = false;
-                    if (callback)
-                        callback();
-
-                }, false);
-            });
-        }
-    }
+    stepCount = 0;
 
     playStep() {
-        if (this.stepNumber >= this.assets.steps.length)
-            this.stepNumber = 0;
-        //this.assets.steps[this.stepNumber].volume = 1;
-        this.createSourceFromBuffer(this.assets.steps[this.stepNumber], .1).then(audio => {
+        console.log("PlayStep!");
+        this.playAudioAsset(this.assets.steps[0]).then(audio => {
             audio.start(0);
-        });
-        this.stepNumber++;
-    }
-    stepThingNumber = 0;
-    thingStepPlaying = false;
-    playThingStep(volume) {
-        // if (this.thingStepPlaying)
-        //     return console.log("woopsie");
-        this.thingStepPlaying = true;
-        if (this.stepThingNumber > 1)
-            this.stepThingNumber = 0;
-        //this.assets.steps[this.stepNumber].volume = 1;
-        this.createSourceFromBuffer(this.assets.thing[6 + this.stepNumber], volume).then(audio => {
-
-            audio.addEventListener('ended', () => {
-                this.thingStepPlaying = false;
-            }, false);
-            audio.start(0);
-        });
-        this.stepThingNumber++;
+        }).catch(console.error);
     }
 
-    createSourceFromBuffer(buffer, volume = 1) {
-        return this.loadAudioBuffer("./SFX/" + buffer, "", 0).then(buff => {
-            let buffer = buff.buffer;
-            let source = audioContext.createBufferSource();
-            source.buffer = buffer;
-            let gainNode = audioContext.createGain();
-            gainNode.gain.value = volume;
-            gainNode.connect(audioContext.destination);
-            source.connect(gainNode);
-            source.loop = false;
-            return Promise.resolve(source);
-        })
+    playAudioAsset(assetName, volume = 1) {
+        return this.loadAudioAsset("./SFX/" + assetName)
+            .then(buffer => this.sourceFromBuffer(buffer, volume)).catch(console.error);
     }
 
-    loadAudioBuffer(url, asset, index) {
+    loadAudioAsset(path) {
         return new Promise((res, rej) => {
 
+            if (this.audioContext == undefined) {
+                if (this.AudioContext == undefined)
+                    this.AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.audioContext = new AudioContext();
+                console.log(this.audioContext);
+            }
             var request = new XMLHttpRequest();
 
-            request.open('GET', url, true);
+            request.open('GET', path, true);
 
             request.responseType = 'arraybuffer';
 
-            request.onload = function () {
+            request.onload = () => {
                 var audioData = request.response;
-
-                audioContext.decodeAudioData(audioData, function (buffer) {
-                    res({ buffer: buffer, asset: asset, index: index });
+                console.log(this.audioContext);
+                this.audioContext.decodeAudioData(audioData, function (buffer) {
+                    res(buffer);
                 },
 
                     function (e) {
-                        console.log("Error with decoding audio data" + e.err);
+                        console.log("Error with decoding audio data", e);
                         rej(e.err);
                     });
 
@@ -374,10 +93,24 @@ export class AudioAssetPlayer {
 
             request.send();
         });
-
     }
 
+    sourceFromBuffer(buffer, volume) {
+        let source = this.audioContext.createBufferSource();
+        source.buffer = buffer;
+        let gainNode = this.audioContext.createGain();
+        gainNode.gain.value = volume;
+        gainNode.connect(this.audioContext.destination);
+        source.connect(gainNode);
+        source.loop = false;
+        return Promise.resolve(source);
+    }
+
+    AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioContext;
     constructor(callback) {
+
+        let sounds = [];
     }
 
 

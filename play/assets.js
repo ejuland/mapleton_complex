@@ -4,10 +4,10 @@ import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
 const manager = new THREE.LoadingManager();
 let log = (stuff) => {
-    if (document.getElementById("stuff") != null)
-        document.getElementById("stuff").innerHTML = stuff;
-    else
-        console.log(stuff);
+    // if (document.getElementById("stuff") != null)
+    //     document.getElementById("stuff").innerHTML = stuff;
+    // else
+    //     console.log(stuff);
 }
 manager.onStart = function (url, itemsLoaded, itemsTotal) {
 
