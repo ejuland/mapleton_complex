@@ -1,4 +1,5 @@
-let THING = class {
+import * as Maze from "./MazeGen.js"
+export class THING{
     Maze = null
     Players = []
     Stage = 0;
@@ -14,6 +15,7 @@ let THING = class {
     turnedAround = false;
     lightsOut = false;
     render(CTX, screen) {
+        return;
         screen.player = this.victim;
         screen.pX = screen.width / 2;
         screen.pY = screen.height / 2;

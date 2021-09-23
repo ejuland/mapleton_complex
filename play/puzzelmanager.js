@@ -1,13 +1,15 @@
 
-const BasicPuzzel = 0;
-const ShapePuzzel = 1;
-const WordPuzzel = 2;
-const ImagePuzzel = 3;
-const ColorPuzzel = 4;
-const PuzzelTypes = [ShapePuzzel, WordPuzzel, ColorPuzzel];
+export const BasicPuzzel = 0;
+export const ShapePuzzel = 1;
+export const WordPuzzel = 2;
+export const ImagePuzzel = 3;
+export const ColorPuzzel = 4;
+export const PuzzelTypes = [ShapePuzzel, WordPuzzel, ColorPuzzel];
+
+import { getRandomNumber } from "./MazeGen.js";
 //const PuzzelTypes = [ShapePuzzel];
 
-const Puzzel = class {
+export class Puzzel {
     x
     y
     type
@@ -16,8 +18,6 @@ const Puzzel = class {
     key
     render(CTX, screen, time) {
         if (this.puzzelOpen) {
-
-
 
         }
     }
@@ -59,15 +59,15 @@ const Puzzel = class {
         this.game = game
     }
 };
-const PuzzelKeys = (() => {
+export const PuzzelKeys = (() => {
     let keys = {};
-        keys[ShapePuzzel] = ["Square", "Circle", "Triangle", "Rectangle"],
+    keys[ShapePuzzel] = ["Square", "Circle", "Triangle", "Rectangle"],
         keys[WordPuzzel] = ["Dog", "Cat", "Chicken", "Horse", "Dodo"],
         keys[ImagePuzzel] = ["teammate_fallen"],
         keys[ColorPuzzel] = ["Red", "Green", "Blue", "Pink", "Purple"];
     return keys;
 })();
-const NOTES = {
+export const NOTES = {
     1: [`the beast that ascendeth\n out of the bottomless pit\n shall make war against them\n and shall overcome them\nRev. 11:7`],
     2: [`the beast that ascendeth\n out of the bottomless pit\n shall make war against them\n and shall overcome them\nRev. 11:7`],
     3: [`the beast that ascendeth\n out of the bottomless pit\n shall make war against them\n and shall overcome them\nRev. 11:7`],
@@ -77,9 +77,9 @@ const NOTES = {
     7: [`the beast that ascendeth\n out of the bottomless pit\n shall make war against them\n and shall overcome them\nRev. 11:7`],
     8: [`the beast that ascendeth\n out of the bottomless pit\n shall make war against them\n and shall overcome them\nRev. 11:7`],
     9: [`the beast that ascendeth\n out of the bottomless pit\n shall make war against them\n and shall overcome them\nRev. 11:7`],
-    10:[`the beast that ascendeth\n out of the bottomless pit\n shall make war against them\n and shall overcome them\nRev. 11:7`],
+    10: [`the beast that ascendeth\n out of the bottomless pit\n shall make war against them\n and shall overcome them\nRev. 11:7`],
 };
-const PuzzelManager = class {
+export class PuzzelManager {
     puzzels = {};
     puzzelType = BasicPuzzel;
     key = [];

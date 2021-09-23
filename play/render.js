@@ -1,59 +1,24 @@
-let Render = class {
+
+import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
+import { ResourceLoader } from "./assets.js";
+import * as Maze from "./MazeGen.js"
+import * as Item from "./items.js"
+export class Render {
 
 
     //render options
     assets = {
-        corner_right: "./assets/right.webp",
-        corner_right_2: "./assets/right2.webp",
-        corner_right_3: "./assets/right3.webp",
-        corner_left: "./assets/left.webp",
-        corner_left_2: "./assets/left2.webp",
-        corner_left_3: "./assets/left3.webp",
-        corner_fork: "./assets/t.webp",
-        corner_fork_2: "./assets/t2.webp",
-        corner_fork_3: "./assets/t3.webp",
-        corner_fork_right: "./assets/tright.webp",
-        corner_fork_right_2: "./assets/tright2.webp",
-        corner_fork_right_3: "./assets/tright3.webp",
-        corner_fork_left: "./assets/tleft.webp",
-        corner_fork_left_2: "./assets/tleft2.webp",
-        corner_fork_left_3: "./assets/tleft3.webp",
-        deadend: "./assets/dead.webp",
-        deadend_2: "./assets/dead_2.webp",
-        deadend_3: "./assets/dead3.webp",
-        straight: "./assets/straight.webp",
-        straight_2: "./assets/straight_2.webp",
-        straight_3: "./assets/straight_3.webp",
-        straight2: "./assets/straight2.webp",
-        straight2_2: "./assets/straight2_2.webp",
-        straight2_3: "./assets/straight_2_3.webp",
-        intersection: "./assets/4w.webp",
-        intersection_2: "./assets/4w2.webp",
-        intersection_3: "./assets/4w3.webp",
+
         pointer: "./assets/pointer.webp",
         north: "./assets/north.webp",
         south: "./assets/south.webp",
         east: "./assets/east.webp",
         west: "./assets/west.webp",
-        door_end_closed_1: "./assets/door_end_closed_1.webp",
-        door_end_closed_2: "./assets/door_end_closed_2.webp",
-        door_end_closed_3: "./assets/door_end_closed_3.webp",
-        door_end_opened_1: "./assets/door_end_open_1.webp",
-        door_end_opened_2: "./assets/door_end_open_2.webp",
-        door_end_opened_3: "./assets/door_end_open_3.webp",
-        key_end: "./assets/key_end.webp",
-        key_end_empty: "./assets/key_end_empty.webp",
         key_item: "./assets/key_item.webp",
         note_item: "./assets/note_item.webp",
-        note_end: "./assets/note_end.webp",
-        puzzel_end: "./assets/puzzel_end.webp",
         salt_item: "./assets/salt_item.webp",
         map_item: "./assets/map.webp",
         strobe_item: "./assets/strobe_item.webp",
-        supply_end: "./assets/supply_end.webp",
-        supply_end_open: "./assets/supply_end_open.webp",
-        teammate_fallen: "./assets/teammate_fallen.webp",
-        teammate: "./assets/teammate.webp",
         stage1: "./assets/thing_1.webp",
         stage2: "./assets/thing_2.webp",
         stage3: "./assets/thing_3.webp",
@@ -67,8 +32,6 @@ let Render = class {
         strobe_6: "./assets/strobe_6.webp",
         strobe_7: "./assets/strobe_7.webp",
         strobe_8: "./assets/strobe_8.webp",
-        light_on: "./assets/flashlight_on.webp",
-        light_off: "./assets/flashlight_off.webp",
         start: "./assets/level_start.webp",
         loading: "./assets/level_loading.webp",
         panel: "./assets/panel.webp",
@@ -82,140 +45,140 @@ let Render = class {
     }
 
     renderTileView(CTX, screen, tVal) {
+        this.clearScreen(CTX, screen);
         this.renderFlashLight(CTX, screen, false);
         switch (tVal) {
-            case Corner:
-                RenderEngine.renderCorner(CTX, screen, screen.player.getAvaliablePaths());
+            case Maze.Corner:
+                this.renderCorner(CTX, screen, screen.player.getAvaliablePaths());
                 break;
-            case Deadend:
-                RenderEngine.renderDeadend(CTX, screen)
+            case Maze.Deadend:
+                this.renderDeadend(CTX, screen)
                 break;
-            case Fork:
-                RenderEngine.renderFork(CTX, screen, screen.player.getAvaliablePaths());
+            case Maze.Fork:
+                this.renderFork(CTX, screen, screen.player.getAvaliablePaths());
                 break;
-            case Intersection:
-                RenderEngine.renderIntersection(CTX, screen)
+            case Maze.Intersection:
+                this.renderIntersection(CTX, screen)
                 break;
-            case SupplyEnd:
-                RenderEngine.renderDeadend(CTX, screen)
-                this.renderImageAsset(CTX, this.assets.supply_end, 0, 0, screen.width, screen.height)
-                break;
-
-            case KeyEnd:
-                RenderEngine.renderDeadend(CTX, screen)
-                this.renderImageAsset(CTX, this.assets.key_end, 0, 0, screen.width, screen.height)
-                break;
-            case EmptyKeyEnd:
-                RenderEngine.renderDeadend(CTX, screen)
-                this.renderImageAsset(CTX, this.assets.key_end_empty, 0, 0, screen.width, screen.height)
+            case Maze.SupplyEnd:
+                this.renderDeadend(CTX, screen)
+                this.renderImageAsset(CTX, this.assets.supply_end, 0, 0, window.innerWidth, window.innerHeight)
                 break;
 
-            case PuzzelEnd:
-                RenderEngine.renderDeadend(CTX, screen)
-                this.renderImageAsset(CTX, this.assets.puzzel_end, 0, 0, screen.width, screen.height)
+            case Maze.KeyEnd:
+                this.renderDeadend(CTX, screen)
+                this.renderImageAsset(CTX, this.assets.key_end, 0, 0, window.innerWidth, window.innerHeight)
                 break;
-            case LevelStart:
-                RenderEngine.renderDeadend(CTX, screen)
-                this.renderImageAsset(CTX, this.assets.start, 0, 0, screen.width, screen.height)
+            case Maze.EmptyKeyEnd:
+                this.renderDeadend(CTX, screen)
+                this.renderImageAsset(CTX, this.assets.key_end_empty, 0, 0, window.innerWidth, window.innerHeight)
                 break;
-            case LevelLoading:
-                RenderEngine.renderFlashLight(CTX, screen, false);
-                this.renderImageAsset(CTX, this.assets.loading, 0, 0, screen.width, screen.height)
+
+            case Maze.PuzzelEnd:
+                this.renderDeadend(CTX, screen)
+                this.renderImageAsset(CTX, this.assets.puzzel_end, 0, 0, window.innerWidth, window.innerHeight)
                 break;
-            case OpenDoorEnd:
-                RenderEngine.renderOpenDoor(CTX, screen)
+            case Maze.LevelStart:
+                this.loadMazeSection(this.MazeSections["straight"]);
                 break;
-            case ClosedDoorEnd:
-                RenderEngine.renderClosedDoor(CTX, screen)
-                this.renderImageAsset(CTX, this.assets.panel, 0, 0, screen.width, screen.height)
-                this.renderImageAsset(CTX, this.assets.power_door, 0, 0, screen.width, screen.height)
+            case Maze.LevelLoading:
+                this.renderFlashLight(CTX, screen, false);
+                this.renderImageAsset(CTX, this.assets.loading, 0, 0, window.innerWidth, window.innerHeight)
                 break;
-            case PlayerStart:
-                RenderEngine.renderClosedDoor(CTX, screen)
-                this.renderImageAsset(CTX, this.assets.panel, 0, 0, screen.width, screen.height)
+            case Maze.OpenDoorEnd:
+                this.renderOpenDoor(CTX, screen)
                 break;
-            case OpenSupplyEnd:
-                RenderEngine.renderDeadend(CTX, screen)
+            case Maze.ClosedDoorEnd:
+                this.renderClosedDoor(CTX, screen)
+                this.renderImageAsset(CTX, this.assets.panel, 0, 0, window.innerWidth, window.innerHeight)
+                this.renderImageAsset(CTX, this.assets.power_door, 0, 0, window.innerWidth, window.innerHeight)
+                break;
+            case Maze.PlayerStart:
+                this.renderClosedDoor(CTX, screen)
+                this.renderImageAsset(CTX, this.assets.panel, 0, 0, window.innerWidth, window.innerHeight)
+                break;
+            case Maze.OpenSupplyEnd:
+                this.renderDeadend(CTX, screen)
                 this.renderOpenSupplyEnd(CTX, screen)
                 break;
-            case NoteEnd:
-                RenderEngine.renderDeadend(CTX, screen)
-                this.renderImageAsset(CTX, this.assets.note_end, 0, 0, screen.width, screen.height)
+            case Maze.NoteEnd:
+                this.renderDeadend(CTX, screen)
+                this.renderImageAsset(CTX, this.assets.note_end, 0, 0, window.innerWidth, window.innerHeight)
                 break;
             default:
                 console.log(tVal)
-                RenderEngine.renderStraight(CTX, screen)
+                this.renderStraight(CTX, screen)
         }
     }
 
 
 
     renderText(CTX, screen, text = "") {
-        //this.drawBlock(CTX, "black", 0, 0, (screen.width > screen.height) ? screen.width : screen.height);
-        CTX.font = "48px sans-serif";
+        //this.drawBlock(CTX, "black", 0, 0, (window.innerWidth > window.innerHeight) ? window.innerWidth : window.innerHeight);
+        CTX.font = "this.48px sans-serif";
         let lines = text.split("\n");
 
-        let marginTop = (screen.height - (lines.length * 48)) / 2
+        let marginTop = (window.innerHeight - (lines.length * 48)) / 2
         lines.forEach(line => {
             CTX.fillStyle = "black";
             CTX.textAlign = "center";
-            CTX.fillText(line, screen.width / 2 + 2, marginTop += 50);
+            CTX.fillText(line, window.innerWidth / 2 + 2, marginTop += 50);
         });
-        marginTop = (screen.height - (lines.length * 48)) / 2
+        marginTop = (window.innerHeight - (lines.length * 48)) / 2
         lines.forEach(line => {
             CTX.fillStyle = "white";
             CTX.textAlign = "center";
-            CTX.fillText(line, screen.width / 2, marginTop += 48);
+            CTX.fillText(line, window.innerWidth / 2, marginTop += 48);
         });
 
     }
 
     renderNote(CTX, screen, text = "", fontSize = 48, type = 1) {
-        //this.drawBlock(CTX, "black", 0, 0, (screen.width > screen.height) ? screen.width : screen.height);
-        this.renderImageAsset(CTX, this.assets["note" + type], 0, 0, screen.width, screen.height)
-        CTX.font = fontSize + "px 'Courier New'";
+        //this.drawBlock(CTX, "black", 0, 0, (window.innerWidth > window.innerHeight) ? window.innerWidth : window.innerHeight);
+        this.renderImageAsset(CTX, this.assets["note" + type], 0, 0, window.innerWidth, window.innerHeight)
+        CTX.font = fontSize + "this.px 'Courier New'";
         let lines = text.split("\n");
 
-        // let marginTop = (screen.height - (lines.length * fontSize)) / 2
+        // let marginTop = (window.innerHeight - (lines.length * fontSize)) / 2
         // lines.forEach(line => {
         //     CTX.fillStyle = "grey";
         //     CTX.textAlign = "center";
-        //     CTX.fillText(line, screen.width / 2, marginTop += fontSize);
+        //     CTX.fillText(line, window.innerWidth / 2, marginTop += fontSize);
         // });
-        let marginTop = (screen.height - (lines.length * fontSize)) / 2
+        let marginTop = (window.innerHeight - (lines.length * fontSize)) / 2
         lines.forEach(line => {
             CTX.fillStyle = "black";
             CTX.textAlign = "center";
-            CTX.fillText(line, screen.width / 2 + 2, marginTop += fontSize + 1);
+            CTX.fillText(line, window.innerWidth / 2 + 2, marginTop += fontSize + 1);
         });
 
     }
 
     renderOpenSupplyEnd(CTX, screen) {
-        this.renderImageAsset(CTX, this.assets.supply_end_open, 0, 0, screen.width, screen.height)
+        this.renderImageAsset(CTX, this.assets.supply_end_open, 0, 0, window.innerWidth, window.innerHeight)
     }
     /* THING RENDER */
     renderThingPosition1(CTX, screen) {
-        this.renderImageAsset(CTX, this.assets.stage1, 0, 0, screen.width, screen.height);
-        screen.pX = screen.width / 2;
-        screen.pY = screen.height / 2;
+        this.renderImageAsset(CTX, this.assets.stage1, 0, 0, window.innerWidth, window.innerHeight);
+     this.pX = window.innerWidth / 2;
+     this.pY = window.innerHeight / 2;
         this.renderFlashLight(CTX, screen, true);
     }
     renderThingPosition2(CTX, screen) {
-        this.renderImageAsset(CTX, this.assets.stage2, 0, 0, screen.width, screen.height);
-        screen.pX = screen.width / 2;
-        screen.pY = screen.height / 2;
+        this.renderImageAsset(CTX, this.assets.stage2, 0, 0, window.innerWidth, window.innerHeight);
+     this.pX = window.innerWidth / 2;
+     this.pY = window.innerHeight / 2;
         this.renderFlashLight(CTX, screen, true);
 
     }
     renderThingPosition3(CTX, screen) {
-        this.renderImageAsset(CTX, this.assets.stage3, 0, 0, screen.width, screen.height);
+        this.renderImageAsset(CTX, this.assets.stage3, 0, 0, window.innerWidth, window.innerHeight);
         this.renderFlashLight(CTX, screen, true);
     }
     renderThingPosition4(CTX, screen) {
-        this.renderImageAsset(CTX, this.assets.stage4, 0, 0, screen.width, screen.height);
-        screen.pX = screen.width / 2;
-        screen.pY = screen.height / 2;
+        this.renderImageAsset(CTX, this.assets.stage4, 0, 0, window.innerWidth, window.innerHeight);
+     this.pX = window.innerWidth / 2;
+     this.pY = window.innerHeight / 2;
         this.renderFlashLight(CTX, screen, true);
     }
 
@@ -267,7 +230,7 @@ let Render = class {
                     asset = this.assets.corner_left;
 
             }
-        this.renderImageAsset(CTX, asset, 0, 0, screen.width, screen.height);
+        this.renderImageAsset(CTX, asset, 0, 0, window.innerWidth, window.innerHeight);
     }
 
     renderFork(CTX, screen, avaliable) {
@@ -326,7 +289,7 @@ let Render = class {
                     asset = this.assets.corner_fork;
 
             }
-        this.renderImageAsset(CTX, asset, 0, 0, screen.width, screen.height);
+        this.renderImageAsset(CTX, asset, 0, 0, window.innerWidth, window.innerHeight);
     }
 
     renderDeadend(CTX, screen) {
@@ -348,7 +311,7 @@ let Render = class {
                 asset = this.assets.deadend;
 
         }
-        this.renderImageAsset(CTX, asset, 0, 0, screen.width, screen.height);
+        this.renderImageAsset(CTX, asset, 0, 0, window.innerWidth, window.innerHeight);
     }
     renderOpenDoor(CTX, screen) {
         let asset = "";
@@ -369,7 +332,7 @@ let Render = class {
                 asset = this.assets.door_end_opened_1;
 
         }
-        this.renderImageAsset(CTX, asset, 0, 0, screen.width, screen.height);
+        this.renderImageAsset(CTX, asset, 0, 0, window.innerWidth, window.innerHeight);
     }
     renderClosedDoor(CTX, screen) {
         let asset = "";
@@ -390,7 +353,7 @@ let Render = class {
                 asset = this.assets.door_end_closed_1;
 
         }
-        this.renderImageAsset(CTX, asset, 0, 0, screen.width, screen.height);
+        this.renderImageAsset(CTX, asset, 0, 0, window.innerWidth, window.innerHeight);
     }
     renderIntersection(CTX, screen) {
         let asset = "";
@@ -411,7 +374,7 @@ let Render = class {
                 asset = this.assets.intersection;
 
         }
-        this.renderImageAsset(CTX, asset, 0, 0, screen.width, screen.height);
+        this.renderImageAsset(CTX, asset, 0, 0, window.innerWidth, window.innerHeight);
     }
     stepCount = 0;
     renderStraight(CTX, screen) {
@@ -453,28 +416,28 @@ let Render = class {
                     asset = this.assets.straight2;
 
             }
-        this.renderImageAsset(CTX, asset, 0, 0, screen.width, screen.height);
+        this.renderImageAsset(CTX, asset, 0, 0, window.innerWidth, window.innerHeight);
     }
 
     getItemImage(item) {
         let src = "";
         switch (item) {
-            case Strobe:
+            case Item.Strobe:
                 src = this.assets.strobe_item.src;
                 break;
-            case Salt:
+            case Item.Salt:
                 src = this.assets.salt_item.src;
                 break;
-            case Key:
+            case Item.Key:
                 src = this.assets.key_item.src;
                 break;
-            case MapItem:
+            case Item.MapItem:
                 src = this.assets.map_item.src;
                 break;
-            case FreeHand:
+            case Item.FreeHand:
                 src = this.assets.empty.src
                 break;
-            case Note:
+            case Item.Note:
                 src = this.assets.note_item.src
                 break;
         }
@@ -486,31 +449,17 @@ let Render = class {
         document.getElementById("item-2").src = this.getItemImage(screen.player.item2);
     }
     renderStrobe(CTX, screen, stage) {
-        return this.renderImageAsset(CTX, this.assets["strobe_" + stage], 0, 0, screen.width, screen.height)
+        return this.renderImageAsset(CTX, this.assets["strobe_" + stage], 0, 0, window.innerWidth, window.innerHeight)
     }
 
-    renderFlashLight(CTX, screen, on = true) {
-        let x = screen.pX, y = screen.pY;
-        if (x < 0)
-            x = 0;
-        if (x > screen.width)
-            x = screen.width;
-        if (y < 0)
-            y = 0;
-        if (y > screen.height)
-            y = screen.height;
-        if (screen.width < 1000) {
-            return this.renderImageAsset(CTX, this.assets[on ? "light_on" : "light_off"], (-screen.width * 2) + x, (-screen.height * 2) + y, screen.width * 4, screen.height * 4)
-        } else
-            return this.renderImageAsset(CTX, this.assets[on ? "light_on" : "light_off"], -screen.width + x, -screen.height + y, screen.width * 2, screen.height * 2)
-    }
+
     renderMap(CTX, xOff, yOff, screen, map, orient = North, colorScheme = map_colors, cap = 10) {
         if (map.maze_perimiter < 10)
             cap = 4;
         CTX.save();
         let blockSize = screen.block;
         CTX.translate(screen.w - xOff, screen.h - yOff)
-        this.renderImageAsset(CTX, this.assets.note1, -100, -1000, screen.width, screen.height);
+        this.renderImageAsset(CTX, this.assets.note1, -100, -1000, window.innerWidth, window.innerHeight);
         //this.drawBlock(CTX, "red", 0, 0, 200, 200)
         let xLower =
             (screen.x - (cap / 2) >= 0) ?
@@ -562,9 +511,347 @@ let Render = class {
         CTX.restore();
 
     }
+    clearScreen(CTX, screen) {
+        CTX.clearRect(0, 0,window.innerWidth, window.innerHeight);
+    }
+
+    renderFlashLight(CTX, screen) {
+        //var gradient = CTX.createRadialGradient(this.px, this.py, 50, this.px - 50, this.py - 50, 70);
+        console.log(this.px, this.py, this.flashLightInnerRadius, this.flashLightOutterRadius);
+        var gradient = CTX.createRadialGradient(
+            this.px + 10, this.py + 10, this.flashLightInnerRadius,
+            this.px, this.py, this.flashLightOutterRadius
+        );
+        gradient.addColorStop(0, 'transparent');
+        gradient.addColorStop(1, '#000000fe');
+        CTX.fillStyle = gradient;
+        CTX.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    }
+
+    // 3D Rendering Operations
+
+    updateRenderSize(width, height) {
+        this.camera.aspect = width/height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height);
+    }
+
+    scene = new THREE.Scene();
+    renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("action_screen") });
+    camera = null;
+
+    inTransition = false;
+    offsetY = 0;
+    rotationX = 0;
+    px = window.innerWidth / 2;
+    py = window.innerHeight / 2;
+    flashLightInnerRadius = 130;
+    flashLightOutterRadius = 200;
+    refeshing = false;
+    maxFlashlightRadius = 200;
+    offsetX = 0;
+    cameraX = 0;
+    targetPosition = null;
+    cameraInPosition() {
+        return (this.offsetX > this.cameraX - .05) && (this.offsetX < this.cameraX + .05);
+    }
+    turnRight = false;
+    turnLeft = false;
+    slot = 0;
+
+    delayOver = false;
+    setDelay = false;
+    delayed(time) {
+        if (!this.delayOver) {
+            if (!this.setDelay) {
+                this.setDelay = true;
+                setTimeout(() => {
+                    this.delayOver = true;
+                }, time);
+            }
+        }
+        else {
+            this.delayOver = false;
+            this.setDelay = false;
+            console.log("DONE");
+            return true;
+        }
+    }
+
+    smoothness = 0.09 // 0 to 1 only
+    WIDTH;
+    HEIGHT;
+    focousOnFloor(point = maxFlashlightRadius / 2) {
+
+        if (this.py < this.HEIGHT - point)
+            this.py += 10;
+        return (this.py > this.HEIGHT - point) && this.shrinkFlashlight(70, 50)
+
+    }
+
+    shrinkFlashlight(amount = 10, rate = 5) {
+        if (this.flashLightInnerRadius >= 20) {
+            this.flashLightInnerRadius -= rate;
+            this.flashLightOutterRadius -= rate;
+        } else {
+            this.flashLightInnerRadius--;
+            this.flashLightOutterRadius--;
+        }
+        if (this.flashLightOutterRadius < 0) {
+            this.flashLightOutterRadius = 0;
+        }
+        if (this.flashLightInnerRadius < 0) {
+            this.flashLightInnerRadius = 0;
+        }
+        return this.flashLightInnerRadius <= amount
+    };
+
+    transitions = {
+        straight: [
+            () => {
+                this.MoveCameraToPoint(0, 0, 2)
+                return this.shrinkFlashlight(0) && this.reachedPoint(targetPosition, camera.position);
+            },
+        ],
+        right: [
+            () => {
+                this.MoveCameraToPoint(0, 0, 2.5)
+
+                console.log(this.cameraInPosition());
+                return this.reachedPoint(targetPosition, camera.position);
+            }, () => {
+                cameraX = Math.PI / -2;
+                return this.shrinkFlashlight() && this.cameraInPosition();
+            }
+
+        ],
+        left: [
+            () => {
+                this.MoveCameraToPoint(0, 0, 2.5)
+
+                console.log(this.cameraInPosition());
+                return this.reachedPoint(targetPosition, camera.position);
+            }, () => {
+                cameraX = Math.PI / 2;
+                return this.shrinkFlashlight() && this.cameraInPosition();
+            }
+        ],
+        uturn: [
+            () => {
+                this.MoveCameraToPoint(0, 0, 1)
+                return this.delayed(1000) && this.reachedPoint(targetPosition, camera.position);
+            },
+            () => {
+                cameraX = Math.PI;
+                console.log(this.cameraInPosition());
+                return this.shrinkFlashlight() && this.cameraInPosition();
+            }
+        ]
+    };
+
+    reachedPoint(pos, pos2, epsilon) {
+        console.log(pos, pos2)
+        return (
+            (Math.ceil(Math.abs(pos.x) * 100) / 100 - Math.ceil(Math.abs(pos2.x) * 100) / 100 <= 0.005) &&
+            (Math.ceil(Math.abs(pos.z) * 100) / 100 - Math.ceil(Math.abs(pos2.z) * 100) / 100 <= 0.005));
+    }
+
+    refreshMazeSection() {
+        this.refeshing = true;
+        this.scene.clear();
+        this.renderer.render(this.scene, this.camera);
+        this.camera.position.set(0, 0, 0)
+        this.targetPosition = this.camera.position.clone();
+        this.scene.add(this.camera);
+        this.offsetX = 0;
+        this.cameraX = 0;
+        this.refeshing = false;
+    }
+
+    MoveCameraToPoint(x, y, z) {
+        this.targetPosition = this.camera.position.clone();
+        this.targetPosition.z = -z;
+        this.targetPosition.y = -y;
+        this.targetPosition.x = -x;
+    }
+
+    removeEntity(object) {
+        console.log("Removed!");
+        scene.clear();
+        // renderer.render(scene, gltf.cameras[0]);
+    }
+
+    loadMazeSection(gltf) {
+        this.refreshMazeSection();
+        this.scene.add(gltf.scene);
+        console.log(gltf.cameras);
+        gltf.scene.traverse(n => {
+            if (n.isMesh) {
+                n.castShadow = true;
+                n.receiveShadow = true;
+                if (n.material.map) n.material.map.anisotropy = 16;
+            }
+        });
+        gltf.scene.position.y = -1;
+        gltf.scene.position.x = 0;
+        gltf.scene.position.z = 1;
+        //renderer.render(scene, gltf.cameras[0]);
+    }
+    transitionInstructions = [];
+    transitionInDirection(dir, callback) {
+        let buffer = () => {
+            return this.delayed(1500);
+        };
+        switch (dir) {
+            case 0:
+                this.transitionInstructions = [].concat(...this.transitions.straight, callback, buffer);
+                break;
+            case 1:
+                this.transitionInstructions = [].concat(...this.transitions.right, callback, buffer);
+                break;
+            case 3:
+                this.transitionInstructions = [].concat(...this.transitions.left, callback, buffer);
+                break;
+            case 2:
+                this.transitionInstructions = [].concat(...this.transitions.uturn, callback, buffer);
+                break;
+        }
+        console.log(this.transitionInstructions);
+        this.transitionInstructions.push(() => {
+            // if (this.py + maxFlashlightRadius / 2 > window.innerHeight / 2)
+            //     this.py -= 20;
+            this.flashLightOutterRadius += 12;
+            this.flashLightInnerRadius += 12;
+            if (this.flashLightOutterRadius > this.maxFlashlightRadius) {
+
+                this.flashLightInnerRadius = this.maxFlashlightRadius - 70;
+                this.flashLightOutterRadius = this.maxFlashlightRadius;
+            }
+            return this.flashLightOutterRadius >= this.maxFlashlightRadius;
+        });
+    }
+
+    renderPlayerHUD(player, time, CTX, screen){
+        screen.player = player;
+        let tVal = player.maze.getTileValue(player.x, player.y);
+        let block = 10;
+        console.log(screen.pX, screen.pY);
+        // if (this.lastPos.x != this.x || this.lastPos.y != this.y)
+        //this.renderTileView(CTX, screen, tVal);
+
+        if (player.triggeredSighting && player.maze.level >= 2) {
+            player.stepsSinceSighting = 0;
+            if (player.thingPosition == 0) {
+
+                this.renderThingPosition1(CTX, screen);
+                if (!player.playingSound) {
+                    player.playingSound = true;
+                    player.AudioMixer.playThingRoar(1, 2, () => {
+                        player.triggeredSighting = false;
+                        player.playingSound = false;
+                        player.thingPosition++;
+                    });
+                }
+            } else {
+                this.renderThingPosition1(CTX, screen);
+                if (!player.playingSound) {
+                    player.playingSound = true;
+                    player.AudioMixer.playThingRoar(0, 2, () => {
+                        player.triggeredSighting = false;
+                        player.playingSound = false;
+                        player.thingPosition = 0;
+                    });
+                }
+            }
+        }
+
+        for (let i = 0; i < player.lightBattery / 10; i++) {
+            let color;
+            if (i < 2)
+                color = "red";
+            else if (i >= 5)
+                color = "green";
+            else
+                color = "yellow";
+            this.drawBlock(CTX, color, 0, screen.height - (20 + (i * 20)), 20);
+        }
+
+        if (!player.inMenu && (player.hasMap && player.mapType == 1)) {
+            this.renderMap(CTX, (10 * block), (10 * block), { w: screen.width, h: screen.height, block: block, x: player.x, y: player.y }, player.maze, player.orientation, map_colors);
+        }
+        else if (!player.inMenu && (player.hasMap)) {
+            this.renderMap(CTX, (10 * block), (10 * block), { w: screen.width, h: screen.height, block: block, x: player.x, y: player.y }, player.map, player.orientation, map_colors);
+        } if (!player.inMenu)
+            this.renderUserItems(screen);
+        if (player.strobed) {
+            let secondsPassed = Math.trunc(player.strobeTime++ / 2);
+            if (secondsPassed < 7) {
+                this.renderStrobe(CTX, screen, 8 - (secondsPassed + 1));
+            } else {
+                this.renderStrobe(CTX, screen, 8);
+            }
+        } else if (!player.strobed && player.strobeTime > 0) {
+            let secondsPassed = Math.trunc((player.strobeTime > 200 ? player.strobeTime -= 100 : player.strobeTime--) / 2);
+            if (secondsPassed < 7) {
+                this.renderStrobe(CTX, screen, secondsPassed + 1);
+                player.resetAttackStates();
+            } else {
+                this.renderStrobe(CTX, screen, 8);
+            }
+        }
+        // this.generateCharacterView(CTX);
+        // CTX.fillStyle = "green";
+        // CTX.fillRect(this.x * blockSize, this.y * blockSize, blockSize, blockSize)
+    }
+
+    // setTimeout(() => MoveCameraToPoint(0, 0, 2), 5000);
+    update3DAssets(CTX, screen) {
+        this.updateRenderSize(window.innerWidth, window.innerHeight);
+        this.rotationX =  (screen.pX / window.innerWidth) - .5;
+        //offsetY = (Y / (h / 2)) - .5;   
+        console.log( (screen.pX / window.innerWidth));
+        console.log(this.rotationX, this.offsetY);
+        // requestAnimationFrame(update);
+        this.px = screen.pX;
+        this.py = screen.pY;
+        this.clearScreen(CTX);
+        this.renderFlashLight(CTX, screen);
+        if (this.refeshing)
+            return;
+        if (!this.cameraInPosition()) {
+            if (this.offsetX < this.cameraX - .05)
+                this.offsetX += this.smoothness / 2
+            else if (this.offsetX > this.cameraX + .05)
+                this.offsetX -= this.smoothness / 2
+        }
+
+        this.camera.rotation.y = -this.rotationX + this.offsetX;
+        this.camera.rotation.x = -this.offsetY - this.offsetY;
+
+        if (this.transitionInstructions.length > 0) {
+            this.inTransition = true;
+            if (this.transitionInstructions[0]())
+                this.transitionInstructions.shift();
+        }
+        else
+            this.inTransition = false;
+        this.camera.position.lerp(this.targetPosition, this.smoothness);
+        this.renderer.render(this.scene, this.camera);
+    }
+
+
     player
+    MazeSections;
     constructor(player) {
         let assets = new ResourceLoader(this.assets);
+        new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera.add(new THREE.PointLight(0xdd9c22, .3));
+        this.targetPosition = this.camera.position.clone();
+        assets.loadLevelAssets(assets.getAssetsForLevel(0), (assets) => {
+            console.log(assets);
+            this.MazeSections = assets;
+        });
         screen.player = player;
     }
 };

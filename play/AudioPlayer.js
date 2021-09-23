@@ -1,7 +1,8 @@
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
-let AudioAssetPlayer = class {
+import { getRandomNumber } from "./MazeGen.js";
+export class AudioAssetPlayer {
     assets = {
         background: ["background_music_2.mp3", "background_music_3.mp3", "background_music_4.mp3"],
         steps: ["step1.mp3", "step2.mp3"],

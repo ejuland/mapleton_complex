@@ -1,12 +1,13 @@
-const Strobe = 1;
-const Salt = 2;
-const Key = 3;
-const Note = 4;
-const MapItem = 5;
-const FreeHand = 0;
+export const Strobe = 1;
+export const Salt = 2;
+export const Key = 3;
+export const Note = 4;
+export const MapItem = 5;
+export const FreeHand = 0;
 
+import * as Maze from "./MazeGen.js"
 
-let ItemsManager = class {
+export class ItemsManager {
     maze = null;
     player = null;
 
@@ -17,7 +18,7 @@ let ItemsManager = class {
     openSupplyScreen(itemIndex, CTX) {
         this.player.canMove = false;
         this.player.inMenu = true;
-        this.player.maze.setTileValue(this.player.x, this.player.y, OpenSupplyEnd);
+        this.player.maze.setTileValue(this.player.x, this.player.y, Maze.OpenSupplyEnd);
         this.inSupplyMenu = true;
         this.supplyItem = itemIndex;
         document.getElementById("item-1").src = RenderEngine.assets.strobe_item.src;
@@ -29,7 +30,7 @@ let ItemsManager = class {
         this.player.inMenu = false;
         this.player.canMove = true;
         this.inSupplyMenu = false;
-        this.player.maze.setTileValue(this.player.x, this.player.y, SupplyEnd);
+        this.player.maze.setTileValue(this.player.x, this.player.y, Maze.SupplyEnd);
     }
 
     setPlayerItem(index, val) {
@@ -61,7 +62,7 @@ let ItemsManager = class {
         let tVal = this.maze.getTileValue(this.player.x, this.player.y);
         if (item == FreeHand) {
             switch (tVal) {
-                case SupplyEnd:
+                case Maze.SupplyEnd:
                     this.game.openChoiceMenu([{ id: Strobe, des: RenderEngine.assets.strobe_item.src }, { id: MapItem, des: RenderEngine.assets.map_item.src }], true, (res) => {
                         let val = parseInt(res[0]);
                         if (val == MapItem)
@@ -79,13 +80,13 @@ let ItemsManager = class {
                             this.setPlayerItem(itemIndex, val);
                     }, 1);
                     break;
-                case KeyEnd:
+                case Maze.KeyEnd:
                     this.setPlayerItem(itemIndex, Key);
-                    this.maze.setTileValue(this.player.x, this.player.y, EmptyKeyEnd)
+                    this.maze.setTileValue(this.player.x, this.player.y, Maze.EmptyKeyEnd)
                     break;
-                case NoteEnd:
+                case Maze.NoteEnd:
                     this.setPlayerItem(itemIndex, Note);
-                    this.maze.setTileValue(this.player.x, this.player.y, Deadend)
+                    this.maze.setTileValue(this.player.x, this.player.y, Maze.Deadend)
                     break;
 
             }
@@ -104,8 +105,8 @@ let ItemsManager = class {
                 this.setPlayerItem(itemIndex, FreeHand);
                 this.player.reading = false;
                 this.player.note = "";
-                let coord = this.maze.getTilesWithValue(Deadend)[0];
-                this.maze.setTileValue(coord.x, coord.y, NoteEnd);
+                let coord = this.maze.getTilesWithValue(Maze.Deadend)[0];
+                this.maze.setTileValue(coord.x, coord.y, Maze.NoteEnd);
             }
         }
 
@@ -132,16 +133,16 @@ let ItemsManager = class {
             });
         }
 
-        if (item == Key && tVal == PuzzelEnd) {
+        if (item == Key && tVal == Maze.PuzzelEnd) {
             this.game.puzzelManager.getPuzzel(this.player.x, this.player.y).beginPuzzel(() => {
                 this.usingItem = false;
                 this.setPlayerItem(itemIndex, FreeHand);
-                let coord = this.maze.getTilesWithValue(Deadend)[0];
-                this.maze.setTileValue(coord.x, coord.y, KeyEnd);
+                let coord = this.maze.getTilesWithValue(Maze.Deadend)[0];
+                this.maze.setTileValue(coord.x, coord.y, Maze.KeyEnd);
             }, () => {
                 this.setPlayerItem(itemIndex, FreeHand);
-                let coord = this.maze.getTilesWithValue(EmptyKeyEnd)[0];
-                this.maze.setTileValue(coord.x, coord.y, KeyEnd);
+                let coord = this.maze.getTilesWithValue(Maze.EmptyKeyEnd)[0];
+                this.maze.setTileValue(coord.x, coord.y, Maze.KeyEnd);
             });
         }
     }
@@ -149,14 +150,14 @@ let ItemsManager = class {
     canUseItem(item) {
         let tVal = this.maze.getTileValue(this.player.x, this.player.y);
         if (item == FreeHand) {
-            return tVal == SupplyEnd || tVal == KeyEnd || tVal == NoteEnd;
+            return tVal == Maze.SupplyEnd || tVal == Maze.KeyEnd || tVal == Maze.NoteEnd;
         }
 
         if (item == Note && this.player.reading)
             return true;
 
         if (item == Key)
-            return this.maze.getTileValue(this.player.x, this.player.y) == PuzzelEnd;
+            return this.maze.getTileValue(this.player.x, this.player.y) == Maze.PuzzelEnd;
 
         // if (item == Strobe) {
         //     return this.game.Thing.vulnerable;

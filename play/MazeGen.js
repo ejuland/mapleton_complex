@@ -1,57 +1,57 @@
-const North = "N";
-const South = "S";
-const East = "E";
-const West = "W";
-const Directions = [North, South, East, West];
+export const North = "N";
+export const South = "S";
+export const East = "E";
+export const West = "W";
+export const Directions = [North, South, East, West];
 
-const Destination = 1;
-const Straight = 2;
-const Traveled = 3;
-const Corner = 4;
-const Left = 5;
-const Fork = 6;
-const Intersection = 7;
-const Barrier = 8;
-const Solution = 9;
-const Deadend = 10;
+export const Destination = 1;
+export const Straight = 2;
+export const Traveled = 3;
+export const Corner = 4;
+export const Left = 5;
+export const Fork = 6;
+export const Intersection = 7;
+export const Barrier = 8;
+export const Solution = 9;
+export const Deadend = 10;
 
-const OpenDoorEnd = 20;
-const ClosedDoorEnd = 21;
-const KeyEnd = 22;
-const NoteEnd = 23;
-const SupplyEnd = 24;
-const OpenSupplyEnd = 25;
-const PuzzelEnd = 26;
-const EmptyKeyEnd = 27;
-const LevelStart = 28;
-const LevelLoading = 29;
-const PlayerStart = 30;
+export const OpenDoorEnd = 20;
+export const ClosedDoorEnd = 21;
+export const KeyEnd = 22;
+export const NoteEnd = 23;
+export const SupplyEnd = 24;
+export const OpenSupplyEnd = 25;
+export const PuzzelEnd = 26;
+export const EmptyKeyEnd = 27;
+export const LevelStart = 28;
+export const LevelLoading = 29;
+export const PlayerStart = 30;
 
-const getRandomNumber = (max) => {
+export const getRandomNumber = (max) => {
     return Math.floor(Math.random() * max)
 }
-const N = (y) => {
+export const N = (y) => {
     let newY = y - 1;
     return newY;
 }
 
-const S = (y) => {
+export const S = (y) => {
     let newY = y + 1;
 
     return newY;
 }
-const E = (x) => {
+export const E = (x) => {
     let newX = x + 1;
 
     return newX;
 }
-const W = (x) => {
+export const W = (x) => {
     let newX = x - 1;
 
     return newX;
 }
 
-const DirMap = (function () {
+export const DirMap = (function () {
     let directions = {};
     directions[North] = N;
     directions[South] = S;
@@ -60,23 +60,24 @@ const DirMap = (function () {
     return directions;
 }());
 
-const Orientations = [North, South, East, West];
-const getOrientation = direction => {
+export const Orientations = [North, South, East, West];
+export const getOrientation = direction => {
     return Orientations.indexOf(direction);
 }
 
-const isAdjacentDirection = (directions) => {
+export const isAdjacentDirection = (directions) => {
     return (directions[North] && directions[West]) ||
         (directions[South] && directions[East]) ||
         (directions[South] && directions[West]) ||
         (directions[North] && directions[East]);
 }
 
-const Paths = [Traveled, Straight, Fork, Corner, Intersection];
-const Ends = [OpenDoorEnd, ClosedDoorEnd, KeyEnd, PuzzelEnd, NoteEnd, SupplyEnd, Deadend, EmptyKeyEnd, PlayerStart]
-const Blocking = [Barrier].concat(...Paths);
-const Destinations = [KeyEnd, EmptyKeyEnd, SupplyEnd, OpenDoorEnd, ClosedDoorEnd, PuzzelEnd, OpenSupplyEnd]
-let MazeGenerator = class {
+export const Paths = [Traveled, Straight, Fork, Corner, Intersection];
+export const Ends = [OpenDoorEnd, ClosedDoorEnd, KeyEnd, PuzzelEnd, NoteEnd, SupplyEnd, Deadend, EmptyKeyEnd, PlayerStart]
+export const Blocking = [Barrier].concat(...Paths);
+export const Destinations = [KeyEnd, EmptyKeyEnd, SupplyEnd, OpenDoorEnd, ClosedDoorEnd, PuzzelEnd, OpenSupplyEnd]
+
+export class MazeGenerator {
 
     /*
      * CONFIG FILE:
@@ -552,7 +553,7 @@ let MazeGenerator = class {
     }
 
     setup(levelData) {
-        this.level = levelData.level; 
+        this.level = levelData.level;
         let xOff = 4;
         let yOff = -4;
         this.setupSpawns(Math.ceil(levelData.players / 4) * 4);

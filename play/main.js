@@ -5,20 +5,20 @@ let Level = class {
     }
 };
 
-const RenderEngine = new Render();
+import { Render } from "./render.js";
+import { AudioAssetPlayer } from "./AudioPlayer.js";
+import { Character } from "./character.js";
+import Game from "./Game.js"
 const AudioMixer = new AudioAssetPlayer(() => {
     let oldSession = null;
     function startLevel(num = 1) {
-        let p1 = new Character();
-        RenderEngine.level = num;
-        let session = new Game(p1, [], num, () => {
-            delete oldSession;
+        let p1 = new Character(AudioMixer);
+        let session = new Game(p1, [], num, AudioMixer, () => {
             AudioMixer.soundLevel = num;
             AudioMixer.shouldPlayBackground = true;
             startLevel(num + 1);
         }, () => {
             setTimeout(() => {
-                delete oldSession;
                 startLevel();
             }, 2000);
         });
