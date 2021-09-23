@@ -496,6 +496,7 @@ export default class Game {
                 this.AudioMixer = new AudioAssetPlayer();
                 this.player1.setAudioMixer(this.AudioMixer);
                 this.AudioMixer.playStep();
+                window.alert("Touched!");
                 return;
                 started = true;
 
@@ -541,7 +542,6 @@ export default class Game {
             }
         }).bind(this);
 
-        window.onclick = start;
         window.onresize = this.resize.bind(this);
         this.resize();
         this.RenderEngine.renderTileView(this.CTX, { height: this.HEIGHT, width: this.WIDTH, pX: this.pointerX, pY: this.pointerY }, Maze.LevelLoading)
