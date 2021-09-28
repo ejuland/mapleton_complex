@@ -107,7 +107,7 @@ export class Render {
     renderTileView(CTX, screen) {
         //this.clearScreen(CTX, screen);
         this.refreshMazeSection();
-        let cap = 3;
+        let cap = 4;
 
         let position = { x: screen.player.x, y: screen.player.y };
         let positions = [];
@@ -313,6 +313,14 @@ export class Render {
         if (pos.x == 0 && pos.y == 0) {
             this.loadMazeSection(this.MazeSections["base"], pos.x, pos.y);
             //this.loadMazeSection(this.MazeSections["front"], pos.x, pos.y, WallTextues.plain_wall);
+            if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.East]])
+                this.loadMazeSection(this.MazeSections["right"], pos.x, pos.y);
+            if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.West]])
+                this.loadMazeSection(this.MazeSections["left"], pos.x, pos.y);
+            if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.North]])
+                this.loadMazeSection(this.MazeSections["back"], pos.x, pos.y);
+            if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.South]])
+                this.loadMazeSection(this.MazeSections["front"], pos.x, pos.y);
         } else {
             let relPosition = screen.player.relDirectionOfPoint(pos.maze.x, pos.maze.y);
 
@@ -320,15 +328,14 @@ export class Render {
             this.orientPos(pos, screen.player);
             console.log(pos);
             this.loadMazeSection(this.MazeSections["base"], pos.x, pos.y);
-            if (screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.East]]) {
-                //RIGHT
-                this.loadMazeSection(this.MazeSections["left"], pos.x, pos.y);
-                this.loadMazeSection(this.MazeSections["back"], pos.x, pos.y);
-
-            } else {
+            if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.East]])
                 this.loadMazeSection(this.MazeSections["right"], pos.x, pos.y);
+            if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.West]])
+                this.loadMazeSection(this.MazeSections["left"], pos.x, pos.y);
+            if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.North]])
                 this.loadMazeSection(this.MazeSections["back"], pos.x, pos.y);
-            }
+            if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.South]])
+                this.loadMazeSection(this.MazeSections["front"], pos.x, pos.y);
         }
         // if (avaliable[screen.player.compass[Maze.East]]) {
         //     //RIGHT
@@ -343,22 +350,15 @@ export class Render {
         this.orientPos(pos, screen.player);
         this.loadMazeSection(this.MazeSections["base"], pos.x, pos.y);
 
-        if (screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.East]] &&
-            screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.North]]) {
-            // FORK RIGHT
-            this.loadMazeSection(this.MazeSections["left"], pos.x, pos.y);
-
-        } else if (screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.West]] &&
-            screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.North]]) {
-            // FORK LEFT
+        if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.East]])
             this.loadMazeSection(this.MazeSections["right"], pos.x, pos.y);
-
-        }
-        else {
-            // FORK
+        if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.West]])
+            this.loadMazeSection(this.MazeSections["left"], pos.x, pos.y);
+        if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.North]])
             this.loadMazeSection(this.MazeSections["back"], pos.x, pos.y);
+        if (!screen.maze.getAvaliablePaths(pos.maze.x, pos.maze.y)[screen.player.compass[Maze.South]])
+            this.loadMazeSection(this.MazeSections["front"], pos.x, pos.y);
 
-        }
     }
 
     renderDeadend(position, screen) {
@@ -402,6 +402,7 @@ export class Render {
         //CLOSED DOOR
     }
     renderIntersection(pos, screen) {
+        this.orientPos(pos, screen.player);
         this.loadMazeSection(this.MazeSections["base"], pos.x, pos.y);
 
     }
@@ -675,10 +676,14 @@ export class Render {
         ],
         right: [
             () => {
+                this.MoveCameraToPoint(0, 0, 1.5)
+                return this.reachedPoint(this.targetPosition, this.camera.position);
+            },
+            () => {
                 this.cameraX = Math.PI / -2;
-                return this.shrinkFlashlight() && this.cameraInPosition();
+                return this.cameraInPosition();
             }, () => {
-                this.MoveCameraToPoint(-1, 0, 3)
+                this.MoveCameraToPoint(-1, 0, 1)
                 if (this.reachedPoint(this.targetPosition, this.camera.position))
                     this.flashlightOn = false;
                 return this.reachedPoint(this.targetPosition, this.camera.position);
@@ -686,6 +691,10 @@ export class Render {
 
         ],
         left: [
+            () => {
+                this.MoveCameraToPoint(0, 0, 2)
+                return this.shrinkFlashlight() && this.reachedPoint(this.targetPosition, this.camera.position);
+            },
             () => {
                 this.cameraX = Math.PI / 2;
                 return this.shrinkFlashlight() && this.cameraInPosition();
@@ -923,7 +932,7 @@ export class Render {
         this.RLoader = assets;
         new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.add(new THREE.PointLight(0xdd9c22, 3));
+        this.camera.add(new THREE.PointLight(0xdd9c22, .3));
         this.targetPosition = this.camera.position.clone();
         screen.player = player;
 
