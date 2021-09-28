@@ -35,16 +35,12 @@ manager.onError = function (url) {
 
 const loader = new GLTFLoader(manager);
 const FirstStageAssets = [
-    { name: "right", location: "./assets/models/right.gltf" },
+    { name: "base", location: "./assets/models/base.gltf" },
     { name: "left", location: "./assets/models/left.gltf" },
-    { name: "straight", location: "./assets/models/straight.gltf" },
-    { name: "t", location: "./assets/models/t.gltf" },
-    { name: "t_right", location: "./assets/models/t_right.gltf" },
-    { name: "t_left", location: "./assets/models/t_left.gltf" },
-    { name: "4w", location: "./assets/models/4w.gltf" },
-    { name: "dead", location: "./assets/models/dead.gltf" },
-    { name: "puzzel_end", location: "./assets/models/puzzel_end.gltf" },
-    { name: "supply_end", location: "./assets/models/supply_end.gltf" },
+    { name: "right", location: "./assets/models/right.gltf" },
+    { name: "back", location: "./assets/models/back.gltf" },
+    { name: "front", location: "./assets/models/front.gltf" },
+
 ];
 
 export class ResourceLoader {
@@ -152,7 +148,7 @@ export class ResourceLoader {
         let assets = [];
         switch (levelNum) {
             default:
-                assets = [].concat(...FirstStageAssets);
+                assets = ([].concat(...FirstStageAssets));
         }
         return assets;
     }

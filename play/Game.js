@@ -1,69 +1,4 @@
-export const colors = {
-    0: "black",
-    1: "blue",
-    2: "red",
-    3: "grey",
-    4: "purple",
-    5: "pink",
-    6: "orange",
-    7: "yellow",
-    8: "black",
-    9: "black",
-    10: "brown",
-    22: "hotpink",
-    23: "cream",
-    24: "skyblue",
-    20: "steelblue",
-    21: "steelblue",
-    26: "olive"
 
-
-};
-export const map_colors = {
-    1: "grey",
-    2: "grey",
-    3: "grey",
-    4: "grey",
-    5: "grey",
-    6: "grey",
-    7: "grey",
-    8: "grey",
-    9: "grey",
-    10: "grey",
-    11: "grey",
-    12: "grey",
-    13: "grey",
-    14: "grey",
-    15: "grey",
-    16: "grey",
-    17: "grey",
-    18: "grey",
-    19: "grey",
-    20: "grey",
-    21: "grey",
-    22: "grey",
-    23: "grey",
-    24: "grey",
-    25: "grey",
-    26: "grey",
-    27: "grey",
-    28: "grey",
-    29: "grey",
-    30: "grey",
-};
-
-export const colorz = {
-    0: "black",
-    1: "red",
-    2: "white",
-    3: "white",
-    4: "white",
-    5: "white",
-    6: "white",
-    8: "white",
-    7: "blue",
-    22: "hotpink"
-};
 import * as Maze from "./MazeGen.js";
 import * as Puzzels from "./puzzelmanager.js";
 import * as Items from "./items.js"
@@ -99,7 +34,7 @@ export default class Game {
         this.SCREEN.setAttribute("height", window.innerHeight);
         this.SCREEN2.setAttribute("width", window.innerWidth);
         this.SCREEN2.setAttribute("height", window.innerHeight);
-        
+
     }
 
     GAMESTATE = {
@@ -291,13 +226,13 @@ export default class Game {
         //this.player1.triggeredAttack = true;
         let dir = 0;
         if (e.code == "ArrowUp")
-            dir = North;
+            dir = Maze.North;
         if (e.code == "ArrowDown")
-            dir = South;
+            dir = Maze.South;
         if (e.code == "ArrowRight")
-            dir = East;
+            dir = Maze.East;
         if (e.code == "ArrowLeft")
-            dir = West;
+            dir = Maze.West;
         if (dir != 0 && this.GAMESTATE.running)
             this.player1.getCharacterInput(dir);
     }
@@ -324,24 +259,36 @@ export default class Game {
 
     pointerX = 0;
     pointerY = 0;
+    moving = false;
     addTouchSupport() {
 
         let endTouch = (dir) => {
-            if (this.GAMESTATE.running)
-                this.player1.getCharacterInput(dir);
+            if (!this.moving) {
+                if (dir !== Maze.South && !this.player1.getAvaliablePaths()[this.player1.compass[dir]])
+                    return;
+                this.moving = true;
+                this.RenderEngine.transitionInDirection(dir, () => {
+                    if (this.GAMESTATE.running){
+                        this.player1.getCharacterInput(dir);
+                        this.RenderEngine.renderTileView(this.CTX, {player:this.player1, maze:this.maze})
+                    }
+                    this.moving = false;
+                    return true;
+                });
+            }
         };
 
         document.getElementById("up").addEventListener("touchend", () => {
-            endTouch(North)
+            endTouch(Maze.North)
         }, false);
         document.getElementById("down").addEventListener("touchend", () => {
-            endTouch(South)
+            endTouch(Maze.South)
         }, false);
         document.getElementById("right").addEventListener("touchend", () => {
-            endTouch(East)
+            endTouch(Maze.East)
         }, false);
         document.getElementById("left").addEventListener("touchend", () => {
-            endTouch(West)
+            endTouch(Maze.West)
         }, false);
 
 
@@ -354,6 +301,17 @@ export default class Game {
             let y = touch.pageY - this.SCREEN.offsetTop;
             this.pointerX = x;
             this.pointerY = y;
+        }).bind(this), false);
+
+        this.SCREEN.addEventListener("touchend", ((e) => {
+            e.preventDefault();
+            if (this.inMessage) {
+                this.inMessage = false;
+                setTimeout(() => {
+                    if (this.player1.reading)
+                        this.player1.reading = false;
+                })
+            }
         }).bind(this), false);
 
 
@@ -465,89 +423,99 @@ export default class Game {
 
 
     // }
-    RenderEngine = new Render();
-    constructor(otherPlayers = [], num, win, loose) {
-        
 
-        this.res = win;
-        this.rej = loose;
-        let started = false;
-        this.levelNum = num;
+
+
+    setUpGameInstance(levelNumber) {
+        this.levelNum = levelNumber;
         this.RenderEngine.level = this.levelNum;
-        let Game = this;
+
         this.player1 = new Character();
-        this.allPlayers = [this.player1].concat(...otherPlayers);
+        this.allPlayers = [this.player1];//.concat(...otherPlayers);
         let levelDat = {
             players: this.allPlayers.length,
             level: this.levelNum
         };
         this.maze = new Maze.MazeGenerator(levelDat);
-        this.playerSpawns = this.maze.getTilesWithValue(Maze.SupplyEnd);
         this.player1.setMaze(this.maze);
+
+        this.playerSpawns = this.maze.getTilesWithValue(Maze.SupplyEnd);
+
+        this.player1.setMaze(this.maze);
+
         let spawn = this.maze.getTilesWithValue(Maze.PlayerStart)[0];
+
         this.allPlayers.forEach((player) => {
             player.setSpawn(spawn.x, spawn.y)
         });
+
         this.setUpPuzzels();
+
         this.maze.exit = this.maze.getTilesWithValue(Maze.ClosedDoorEnd)[0];
 
-        let start = (() => {
-            if (!started) {
-                this.AudioMixer = new AudioAssetPlayer();
-                this.player1.setAudioMixer(this.AudioMixer);
-                this.AudioMixer.playStep();
-                window.alert("Touched!");
-                return;
-                started = true;
+        this.itemManager = new Items.ItemsManager(this.player1, this.maze, this);
 
-                this.RenderEngine.renderFlashLight(this.CTX, { height: this.HEIGHT, width: this.WIDTH, pX: this.pointerX, pY: this.pointerY }, false)
-                this.RenderEngine.renderTileView(this.CTX, { height: this.HEIGHT, width: this.WIDTH, pX: this.pointerX, pY: this.pointerY }, Maze.LevelLoading)
-                this.AudioMixer.playElevatorDown(() => {
-                    this.AudioMixer.playThingBreath();
-                    this.RenderEngine.renderTileView(this.CTX, { height: this.HEIGHT, width: this.WIDTH, pX: this.pointerX, pY: this.pointerY }, Maze.LevelStart)
-                    setTimeout(() => {
-                        this.RenderEngine.renderFlashLight(this.CTX, { height: this.HEIGHT, width: this.WIDTH, pX: this.pointerX, pY: this.pointerY }, false)
-                        this.AudioMixer.playDrop();
-                        setTimeout(() => {
-                            this.AudioMixer.playBackground(this.levelNum)
-                            document.getElementById("item-1").addEventListener("touchend", this.useItem1.bind(this), false)
-                            document.getElementById("item-1").addEventListener("mouseup", this.useItem1.bind(this), false)
+        this.Thing = new THING(this.maze, [this.player1]);//.concat(...otherPlayers));
 
-                            if (this.levelNum <= 5) {
-                                document.getElementById("item-2").addEventListener("touchend ", this.useItem2.bind(this), false)
-                                document.getElementById("item-2").addEventListener("mouseup", this.useItem2.bind(this), false)
-                            } else {
-                                document.getElementById("item-2").classList.add("hidden");
-                            }
+        this.Thing.setVictim(this.player1);
 
-                            this.itemManager = new Items.ItemsManager(this.player1, this.maze, this);
-                            this.Thing = new THING(this.maze, [player1].concat(...otherPlayers));
-                            this.Thing.setVictim(this.player1);
-                            this.render(this.GameLoop.bind(this), this.shouldKillGame);
-                            document.addEventListener("keydown", this.logKeyDown.bind(this));
-                            document.addEventListener("keyup", this.logKeyUp.bind(this));
-                            this.addTouchSupport();
-                        }, 2000);
-                    }, 2000);
-                }, 1);
-
-
-
-            } else if (this.inMessage) {
-                this.inMessage = false;
-                setTimeout(() => {
-                    if (this.player1.reading)
-                        this.player1.reading = false;
-                })
-            }
-        }).bind(this);
 
         window.onresize = this.resize.bind(this);
-        this.resize();
-        this.RenderEngine.renderTileView(this.CTX, { height: this.HEIGHT, width: this.WIDTH, pX: this.pointerX, pY: this.pointerY }, Maze.LevelLoading)
-        this.RenderEngine.renderText(this.CTX, { height: this.HEIGHT, width: this.WIDTH }, "Level " + this.levelNum + "\nTap to begin!");
 
-        document.addEventListener("touchend", start, false);
+
+        this.addTouchSupport();
+        this.linkControls();
+
+    }
+
+
+    linkControls() {
+        document.getElementById("item-1").addEventListener("touchend", this.useItem1.bind(this), false)
+        document.getElementById("item-1").addEventListener("mouseup", this.useItem1.bind(this), false)
+
+        if (this.levelNum <= 5) {
+            document.getElementById("item-2").addEventListener("touchend ", this.useItem2.bind(this), false)
+            document.getElementById("item-2").addEventListener("mouseup", this.useItem2.bind(this), false)
+        } else {
+            document.getElementById("item-2").classList.add("hidden");
+        }
+
+
+        document.addEventListener("keydown", this.logKeyDown.bind(this));
+        document.addEventListener("keyup", this.logKeyUp.bind(this));
+    }
+
+    startGameLoop() {
+        this.render(this.GameLoop.bind(this), this.shouldKillGame);
+    }
+
+    RenderEngine = new Render();
+    constructor(otherPlayers = [], num, win, loose) {
+
+        this.RenderEngine.loadLevelAssets().then(() => {
+            this.setUpGameInstance(1);
+            this.RenderEngine.renderTileView(this.CTX, { maze: this.maze, player: this.player1 }, Maze.LevelStart);
+
+            this.res = win;
+            this.rej = loose;
+            let started = false;
+            this.AudioMixer = new AudioAssetPlayer();
+            // let start = (() => {
+            if (!started) {
+                this.startGameLoop();
+                started = true;
+            }
+
+            // this.AudioMixer.playAudioAsset(this.AudioMixer.assets.steps[0], 1, () => { });
+            // this.AudioMixer.playStep();
+            //this.player1.setAudioMixer(this.AudioMixer);
+            //}).bind(this);
+
+            this.resize();
+            this.RenderEngine.renderText(this.CTX, { height: this.HEIGHT, width: this.WIDTH }, "Level " + this.levelNum + "\nTap to begin!");
+            this.RenderEngine.renderTileView(this.CTX, { maze: this.maze, player: this.player1 }, Maze.LevelStart);
+            // this.SCREEN.addEventListener("touchend", start, false);
+        });
 
 
     }

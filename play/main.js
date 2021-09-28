@@ -1,17 +1,14 @@
-let Level = class {
 
-    constructor(level, players) {
-
-    }
-};
-
-import { Render } from "./render.js";
-import { AudioAssetPlayer } from "./AudioPlayer.js";
-import { Character } from "./character.js";
 import Game from "./Game.js"
 
-if('serviceWorker' in navigator)
-    navigator.serviceWorker.register('./service.js');
+// if('serviceWorker' in navigator)
+//     navigator.serviceWorker.unregister('./service.js');
+
+// navigator.serviceWorker.getRegistrations().then(function (registrations) {
+//     for (let registration of registrations) {
+//         registration.unregister()
+//     }
+// })
 
 let oldSession = null;
 function startLevel(num = 1) {

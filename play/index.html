@@ -180,19 +180,18 @@
             justify-content: space-evenly;
 
         }
-        
-        canvas{
+
+        canvas {
             position: fixed;
             top: 0;
             left: 0;
         }
-        
-        #action_screen{
-            border: 3px solid pink;
-            background-color: rebeccapurple;
+
+        #action_screen {
             z-index: 0;
         }
-        #screen{
+
+        #screen {
             z-index: 1;
         }
 
@@ -235,9 +234,11 @@
             border: 3px solid black;
         }
 
-        #dpad, #btn-container, #options-menu{
+        #dpad,
+        #btn-container,
+        #options-menu {
             z-index: 10;
-        } 
+        }
 
         @media only screen and (max-width: 600px) {
             section {
@@ -300,15 +301,6 @@
     </div>
 
     <div id="resources"></div>
-    <script type="module" src="./MazeGen.js"></script>
-    <script type="module" src="./assets.js"></script>
-    <script type="module" src="./render.js"></script>
-    <script type="module" src="./AudioPlayer.js"></script>
-    <script type="module" src="./Thing.js"></script>
-    <script type="module" src="./character.js"></script>
-    <script type="module" src="./Game.js"></script>
-    <script type="module" src="./items.js"></script>
-    <script type="module" src="./puzzelmanager.js"></script>
     <script type="module" src="./main.js"></script>
     <script>
         /*Copyright (C) Eric Julander 2021 - All Rights Reserved

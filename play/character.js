@@ -12,7 +12,7 @@ export class Character {
     y = 0;
     orientation = Maze.North;
     compass = {}
-    item1 = Item.FreeHand;
+    item1 = Item.MapItem;
     item2 = Item.FreeHand;
     canMove = true;
     paralyzed = false;
@@ -41,6 +41,25 @@ export class Character {
 
         }
         this.orientation = this.compass[Maze.North];
+    }
+
+    relDirectionOfPoint(x, y) {
+        let dirs = {};
+        dirs[Maze.West] = false;
+        dirs[Maze.East] = false;
+        dirs[Maze.North] = false;
+        dirs[Maze.South] = false;
+        
+        if (x < this.x)
+        dirs[this.compass[Maze.East]] = true;
+        if (x > this.x)
+        dirs[this.compass[Maze.West]] = true;
+        if (y < this.y)
+        dirs[this.compass[Maze.South]] = true;
+        if (y > this.y)
+        dirs[this.compass[Maze.North]] = true;
+        
+        return dirs;
     }
 
 
@@ -131,41 +150,6 @@ export class Character {
             return
         }
 
-        let speed = this.lastGameTime - this.timeSinceLastMove;
-        if (speed < 300)
-            return;
-        if (speed < 400) {
-            if (this.speedStrikes++ % 15 == 0) {
-
-                this.canMove = false;
-                this.AudioMixer.playPlayerBreath(2, () => {
-                    this.staminaMazedOut++;
-                    if (this.staminaMazedOut == this.STAMINA_LIMIT - 1)
-                        this.AudioMixer.playThingBreath(() => {
-                            this.canMove = true;
-
-                        }, 2);
-                    else if (this.staminaMazedOut >= this.STAMINA_LIMIT)
-                        this.AudioMixer.playThingBreath(() => {
-                            setTimeout(() => {
-                                this.triggeredAttack = true;
-                                this.staminaMazedOut = 0;
-                                this.speedStrikes = 1
-                                this.canMove = true;
-                            }, 1000)
-                        }, 2);
-                    else {
-                        this.canMove = true;
-                    }
-
-                });
-            }
-
-        } else if (this.speedStrikes > 1)
-            this.speedStrikes--;
-        console.log("Speed" + speed);
-
-
         switch (direction) {
             case Maze.North:
                 this.moveUp();
@@ -184,13 +168,18 @@ export class Character {
         this.lastPos = { x: this.x, y: this.y };
         this.timeSinceLastMove = this.lastGameTime;
         if (this.totalSteps++ % 20 == 0 && this.stepsSinceSighting++ > 15) {
-            if (getRandomNumber(3) == 1)
+            if (Maze.getRandomNumber(3) == 1)
                 this.triggeredSighting = true;
         }
     }
+
+
+
     totalSteps = 0;
     stepsSinceSighting = 0;
     triggeredSighting = false;
+
+
     getCharacterPos() {
 
     }
@@ -224,16 +213,16 @@ export class Character {
             let avaliable = this.getAvaliablePaths();
             this.map.setTileValue(this.x, this.y, val);
             if (avaliable[Maze.North]) {
-                this.map.setTileValue(this.x, N(this.y), val);
+                this.map.setTileValue(this.x, Maze.N(this.y), val);
             }
             if (avaliable[Maze.South]) {
-                this.map.setTileValue(this.x, S(this.y), val);
+                this.map.setTileValue(this.x, Maze.S(this.y), val);
             }
             if (avaliable[Maze.East]) {
-                this.map.setTileValue(E(this.x), (this.y), val);
+                this.map.setTileValue(Maze.E(this.x), (this.y), val);
             }
             if (avaliable[Maze.West]) {
-                this.map.setTileValue(W(this.x), (this.y), val);
+                this.map.setTileValue(Maze.W(this.x), (this.y), val);
             }
         }
         this.lastGameTime += time;
@@ -298,15 +287,21 @@ export class Character {
                 this.x = this.spawnX;
                 this.y = this.spawnY;
                 this.orientation = this.maze.avaliableToDirections(this.getAvaliablePaths(this.x, this.y))[0];
+                console.log(this.orientation);
                 switch (this.orientation) {
                     case Maze.West:
                         this.changeOrientation(RIGHT)
+                        this.changeOrientation(Back);
+
                         break;
-                    case Maze.East:
+                        case Maze.East:
                         this.changeOrientation(LEFT)
+                        this.changeOrientation(Back);
+
                         break;
                     case Maze.South:
-                        this.moveDown()
+                        this.changeOrientation(Back);
+                        //this.moveDown()
                         break;
                     default:
                 }
@@ -324,8 +319,8 @@ export class Character {
     lastPos = { x: 0, y: 0 };
     playingSound = false;
     thingPosition = 0;
-    hasMap = false;
-    mapType = 0;
+    hasMap = true;
+    mapType = 1;
     superMaps = 0;
     render(framesPassed, CTX, screen) {
 

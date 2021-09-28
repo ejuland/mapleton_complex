@@ -36,7 +36,7 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "front_left_wall.001",
+            "name" : "front_left_wall",
             "rotation" : [
                 -0.5001317262649536,
                 0.5001311898231506,
@@ -44,9 +44,9 @@
                 -0.4998682737350464
             ],
             "translation" : [
-                1.1249990463256836,
-                1.000525712966919,
-                0.12447202950716019
+                -0.7506445050239563,
+                1,
+                0
             ]
         }
     ],
@@ -65,7 +65,7 @@
     ],
     "meshes" : [
         {
-            "name" : "Plane.015",
+            "name" : "Plane.007",
             "primitives" : [
                 {
                     "attributes" : {
@@ -159,7 +159,7 @@
     "buffers" : [
         {
             "byteLength" : 140,
-            "uri" : "right.bin"
+            "uri" : "left_wall.bin"
         }
     ]
 }

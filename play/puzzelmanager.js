@@ -44,7 +44,7 @@ export class Puzzel {
                     this.completed = true;
                     completed();
                 } else {
-                    window.alert("looser");
+                    
                 }
             }, 1);
         }

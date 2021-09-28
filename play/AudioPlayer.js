@@ -48,55 +48,55 @@ export class AudioAssetPlayer {
     };
 
 
+
     stepCount = 0;
 
-    playStep() {
-        this.playAudioAsset(this.assets.steps[0]).then(audio => {
-            console.log("PlayStep!");
-            audio.onended = ()=>{
-                window.alert("Finished!");
-            }
-            audio.start(0);
-        }).catch(console.error);
+    times = 0;
+    async playStep() {
+        console.log(this.times++);
+        
+        this.sourceFromBuffer(this.buffy, 1).start(0);
     }
 
-    playAudioAsset(assetName, volume = 1) {
-        return this.loadAudioAsset("./SFX/" + assetName)
-            .then(buffer => this.sourceFromBuffer(buffer, volume)).catch(console.error);
-    }
-
-    loadAudioAsset(path) {
-        return new Promise((res, rej) => {
-
-            if (this.audioContext == undefined) {
-                if (this.AudioContext == undefined)
-                    this.AudioContext = window.AudioContext || window.webkitAudioContext;
-                this.audioContext = new AudioContext();
-                console.log(this.audioContext);
-            }
-            var request = new XMLHttpRequest();
-
-            request.open('GET', path, true);
-
-            request.responseType = 'arraybuffer';
-
-            request.onload = () => {
-                var audioData = request.response;
-                console.log(this.audioContext);
-                this.audioContext.decodeAudioData(audioData, function (buffer) {
-                    res(buffer);
-                },
-
-                    function (e) {
-                        console.log("Error with decoding audio data", e);
-                        rej(e.err);
-                    });
-
-            }
-
-            request.send();
+    playAudioAsset(assetName, volume = 1, callback) {
+        this.loadAudioAsset("./SFX/" + assetName, buffer => {
+            callback(buffer);
         });
     }
+
+    loadAudioAsset(path, callback) {
+
+        if (this.audioContext == undefined) {
+            return rej("Hold your horses");
+            if (this.AudioContext == undefined)
+                this.AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.audioContext = new AudioContext();
+            console.log(this.audioContext);
+        }
+        var request = new XMLHttpRequest();
+
+        request.open('GET', path, true);
+
+        request.responseType = 'arraybuffer';
+
+        request.onload = () => {
+            var audioData = request.response;
+            console.log(this.audioContext);
+            this.audioContext.decodeAudioData(audioData, function (buffer) {
+                callback(buffer);
+            },
+
+                function (e) {
+                    console.log("Error with decoding audio data", e);
+                    console.error(e.err);
+                });
+
+        }
+
+        request.send();
+    }
+
+    buffy = [];
 
     sourceFromBuffer(buffer, volume) {
         let source = this.audioContext.createBufferSource();
@@ -106,14 +106,17 @@ export class AudioAssetPlayer {
         gainNode.connect(this.audioContext.destination);
         source.connect(gainNode);
         source.loop = false;
-        return Promise.resolve(source);
+        return source;
     }
 
-    AudioContext = window.AudioContext || window.webkitAudioContext;
+    AudioContext;
     audioContext;
     constructor(callback) {
-
-        let sounds = [];
+        this.AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.audioContext = new AudioContext();
+        this.loadAudioAsset("./SFX/"+this.assets.steps[0], (buff)=>{
+            this.buffy = buff;
+        });
     }
 
 
