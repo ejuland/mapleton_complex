@@ -12,7 +12,7 @@ export class Character {
     y = 0;
     orientation = Maze.North;
     compass = {}
-    item1 = Item.MapItem;
+    item1 = Item.FreeHand;
     item2 = Item.FreeHand;
     canMove = true;
     paralyzed = false;
@@ -323,8 +323,8 @@ export class Character {
     lastPos = { x: 0, y: 0 };
     playingSound = false;
     thingPosition = 0;
-    hasMap = true;
-    mapType = 1;
+    hasMap = false;
+    mapType = 0;
     superMaps = 0;
     render(framesPassed, CTX, screen) {
 

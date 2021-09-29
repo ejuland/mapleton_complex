@@ -525,7 +525,6 @@ export class Render {
     renderMap(CTX, xOff, yOff, screen, map, orient = North, colorScheme = map_colors, cap = 10) {
         if (map.maze_perimiter < 10)
             cap = 4;
-        colorScheme = colors;
         CTX.save();
         let blockSize = screen.block;
         CTX.translate(screen.w - xOff, screen.h - yOff)
