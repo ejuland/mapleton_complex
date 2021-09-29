@@ -268,9 +268,9 @@ export default class Game {
                     return;
                 this.moving = true;
                 this.RenderEngine.transitionInDirection(dir, () => {
-                    if (this.GAMESTATE.running){
+                    if (this.GAMESTATE.running) {
                         this.player1.getCharacterInput(dir);
-                        this.RenderEngine.renderTileView(this.CTX, {player:this.player1, maze:this.maze})
+                        this.RenderEngine.renderTileView(this.CTX, { player: this.player1, maze: this.maze })
                     }
                     this.moving = false;
                     return true;
@@ -500,21 +500,20 @@ export default class Game {
             this.rej = loose;
             let started = false;
             this.AudioMixer = new AudioAssetPlayer();
-            // let start = (() => {
-            if (!started) {
-                this.startGameLoop();
-                started = true;
-            }
-
-            // this.AudioMixer.playAudioAsset(this.AudioMixer.assets.steps[0], 1, () => { });
-            // this.AudioMixer.playStep();
-            //this.player1.setAudioMixer(this.AudioMixer);
-            //}).bind(this);
+            let start = (() => {
+                if (!started) {
+                    this.startGameLoop();
+                    started = true;
+                }
+                this.AudioMixer.playAudioAsset(this.AudioMixer.assets.steps[0], 1, () => { });
+                this.AudioMixer.playStep();
+                this.player1.setAudioMixer(this.AudioMixer);
+            }).bind(this);
 
             this.resize();
             this.RenderEngine.renderText(this.CTX, { height: this.HEIGHT, width: this.WIDTH }, "Level " + this.levelNum + "\nTap to begin!");
             this.RenderEngine.renderTileView(this.CTX, { maze: this.maze, player: this.player1 }, Maze.LevelStart);
-            // this.SCREEN.addEventListener("touchend", start, false);
+            this.SCREEN.addEventListener("touchend", start, false);
         });
 
 

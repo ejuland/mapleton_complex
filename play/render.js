@@ -575,7 +575,7 @@ export class Render {
                 this.px + 10, this.py + 10, this.flashLightInnerRadius,
                 this.px, this.py, this.flashLightOutterRadius
             );
-            gradient.addColorStop(0, '#000000e0');
+            gradient.addColorStop(0, '#000000a0');
             gradient.addColorStop(1, '#000000fe');
             CTX.fillStyle = gradient;
             CTX.fillRect(0, 0, window.innerWidth, window.innerHeight);
@@ -932,7 +932,7 @@ export class Render {
         this.RLoader = assets;
         new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.add(new THREE.PointLight(0xdd9c22, .3));
+        this.camera.add(new THREE.PointLight(0xdd9c22, 1.3));
         this.targetPosition = this.camera.position.clone();
         screen.player = player;
 
