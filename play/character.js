@@ -305,6 +305,10 @@ export class Character {
                         break;
                     default:
                 }
+                this.moveDown();
+                this.moveLeft();
+                this.moveRight();
+                this.moveUp();
             }
 
         } else {

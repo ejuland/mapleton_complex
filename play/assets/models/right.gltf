@@ -36,7 +36,7 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "front_left_wall.001",
+            "name" : "right",
             "rotation" : [
                 -0.5001317262649536,
                 0.5001311898231506,
@@ -44,28 +44,27 @@
                 -0.4998682737350464
             ],
             "translation" : [
-                1.1249990463256836,
-                1.000525712966919,
-                0.12447202950716019
+                0.8749994039535522,
+                1.0006790161132812,
+                -0.0011695027351379395
             ]
         }
     ],
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "sub2",
+            "name" : "1.001",
             "pbrMetallicRoughness" : {
                 "baseColorTexture" : {
                     "index" : 0
                 },
-                "metallicFactor" : 0,
-                "roughnessFactor" : 0.5
+                "metallicFactor" : 0
             }
         }
     ],
     "meshes" : [
         {
-            "name" : "Plane.015",
+            "name" : "Plane.002",
             "primitives" : [
                 {
                     "attributes" : {
@@ -88,8 +87,8 @@
     "images" : [
         {
             "mimeType" : "image/jpeg",
-            "name" : "office wall_2",
-            "uri" : "textures/office%20wall_2.jpg"
+            "name" : "office wall",
+            "uri" : "textures/office%20wall.jpg"
         }
     ],
     "accessors" : [
@@ -98,14 +97,14 @@
             "componentType" : 5126,
             "count" : 4,
             "max" : [
-                1,
-                0,
-                1
+                0.87587571144104,
+                4.541892622000887e-07,
+                1.0000653266906738
             ],
             "min" : [
-                -1,
-                0,
-                -1
+                -0.8754082918167114,
+                -6.7429603567426e-11,
+                -0.5588158369064331
             ],
             "type" : "VEC3"
         },

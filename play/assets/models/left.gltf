@@ -36,24 +36,24 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "center_left_panel",
+            "name" : "left",
             "rotation" : [
-                0.49935948848724365,
-                0.5003769993782043,
-                -0.5006402134895325,
-                0.4996221661567688
+                -0.5001317262649536,
+                0.5001311898231506,
+                -0.4998687505722046,
+                -0.4998682737350464
             ],
             "translation" : [
-                -1.1229643821716309,
-                0.9940094351768494,
-                0.12447643280029297
+                -0.8750009536743164,
+                1.0001533031463623,
+                0.00011432170867919922
             ]
         }
     ],
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "door_panel",
+            "name" : "1.001",
             "pbrMetallicRoughness" : {
                 "baseColorTexture" : {
                     "index" : 0
@@ -64,7 +64,7 @@
     ],
     "meshes" : [
         {
-            "name" : "Plane.008",
+            "name" : "Plane.003",
             "primitives" : [
                 {
                     "attributes" : {
@@ -87,8 +87,8 @@
     "images" : [
         {
             "mimeType" : "image/jpeg",
-            "name" : "office wall_3",
-            "uri" : "textures/office%20wall_3.jpg"
+            "name" : "office wall",
+            "uri" : "textures/office%20wall.jpg"
         }
     ],
     "accessors" : [
@@ -97,14 +97,14 @@
             "componentType" : 5126,
             "count" : 4,
             "max" : [
-                1,
-                0,
-                1
+                0.87587571144104,
+                4.541892622000887e-07,
+                1.0000653266906738
             ],
             "min" : [
-                -1,
-                0,
-                -1
+                -0.8754082918167114,
+                -6.7429603567426e-11,
+                -0.5588158369064331
             ],
             "type" : "VEC3"
         },
