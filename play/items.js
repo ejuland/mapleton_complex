@@ -15,14 +15,14 @@ export class ItemsManager {
 
     inSupplyMenu = false;
     supplyItem = 0;
-    openSupplyScreen(itemIndex, CTX) {
+    openSupplyScreen(itemIndex, assets, CTX) {
         this.player.canMove = false;
         this.player.inMenu = true;
         this.player.maze.setTileValue(this.player.x, this.player.y, Maze.OpenSupplyEnd);
         this.inSupplyMenu = true;
         this.supplyItem = itemIndex;
-        document.getElementById("item-1").src = RenderEngine.assets.strobe_item.src;
-        document.getElementById("item-2").src = RenderEngine.assets.map_item.src;
+        document.getElementById("item-1").src = assets.strobe_item.src;
+        document.getElementById("item-2").src = assets.map_item.src;
 
     }
 
@@ -42,7 +42,7 @@ export class ItemsManager {
     }
 
     usingItem = false;
-    useItem(item, itemIndex, CTX) {
+    useItem(item, itemIndex, assets, CTX) {
         if (this.usingItem)
             return;
         if (this.inSupplyMenu) {
@@ -63,10 +63,10 @@ export class ItemsManager {
         if (item == FreeHand) {
             switch (tVal) {
                 case Maze.SupplyEnd:
-                    this.game.openChoiceMenu([{ id: Strobe, des: RenderEngine.assets.strobe_item.src }, { id: MapItem, des: RenderEngine.assets.map_item.src }], true, (res) => {
+                    this.game.openChoiceMenu([{ id: Strobe, des: assets.strobe_item.src }, { id: MapItem, des: assets.map_item.src }], true, (res) => {
                         let val = parseInt(res[0]);
                         if (val == MapItem)
-                            if (getRandomNumber(100) == 66 && this.player.superMaps < 5) {
+                            if (Maze.getRandomNumber(100) == 66 && this.player.superMaps < 5) {
                                 this.player.superMaps++;
                                 this.player.mapType = 1;
                                 this.player.hasMap = true;
@@ -123,7 +123,7 @@ export class ItemsManager {
 
             setTimeout(() => {
                 this.game.Thing.takeFlash();
-            }, getRandomNumber(10) * 100)
+            }, Maze.getRandomNumber(10) * 100)
 
             this.player.strobed = true;
             AudioMixer.playStrobe(() => {

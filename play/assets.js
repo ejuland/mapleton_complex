@@ -40,6 +40,8 @@ const FirstStageAssets = [
     { name: "right", location: "./assets/models/right.gltf" },
     { name: "back", location: "./assets/models/back.gltf" },
     { name: "front", location: "./assets/models/front.gltf" },
+    { name: "cabinet", location: "./assets/models/cabinets.gltf" },
+    { name: "puzzel", location: "./assets/models/puzzel.gltf" },
 
 ];
 

@@ -103,6 +103,7 @@ export class Render {
         note3: "./assets/note3.webp",
         rust: "./assets/rust.webp",
         star: "./assets/star.webp",
+        puzzel: "./assets/models/textures/puzzel_end.jpg",
         dark_stuff: "./assets/dark_stuff.webp",
     }
 
@@ -173,17 +174,21 @@ export class Render {
                     break;
                 case Maze.SupplyEnd:
                     this.renderClosedDoor(pos, screen)
+                    this.renderCabinet(pos, screen);
                     break;
 
                 case Maze.KeyEnd:
-                    this.renderClosedDoor(pos, screen)
+                    this.renderDeadend(pos, screen)
+                    this.renderCabinet(pos, screen);
                     break;
                 case Maze.EmptyKeyEnd:
                     this.renderClosedDoor(pos, screen)
                     break;
 
                 case Maze.PuzzelEnd:
-                    this.renderClosedDoor(pos, screen)
+                    this.renderDeadend(pos, screen)
+                    this.renderPuzzel(pos, screen);
+
                     // this.renderImageAsset(CTX, this.assets.puzzel_end, 0, 0, window.innerWidth, window.innerHeight)
                     break;
                 case Maze.LevelStart:
@@ -216,6 +221,37 @@ export class Render {
     }
 
 
+    renderCabinet(pos, screen) {
+        this.orientPos(pos, screen.player);
+        let relPosition = screen.player.relDirectionOfPoint(pos.maze.x, pos.maze.y);
+        if (pos.x > 0)
+            this.loadMazeSection(this.MazeSections["cabinet"], pos.x, pos.y, this.assets.rust.src, RIGHT);
+        else if (pos.x < 0)
+            this.loadMazeSection(this.MazeSections["cabinet"], pos.x, pos.y, this.assets.rust.src, LEFT);
+        else
+            this.loadMazeSection(this.MazeSections["cabinet"], pos.x, pos.y);
+
+    }
+    renderPuzzel(pos, screen) {
+        this.orientPos(pos, screen.player);
+        if (pos.x > 0)
+            this.loadMazeSection(this.MazeSections["puzzel"], pos.x, pos.y, this.assets.puzzel.src, RIGHT);
+        else if (pos.x < 0)
+            this.loadMazeSection(this.MazeSections["puzzel"], pos.x, pos.y, this.assets.puzzel.src, LEFT);
+        else
+            this.loadMazeSection(this.MazeSections["puzzel"], pos.x, pos.y);
+    }
+
+    render3dPlane(pos, screen, src) {
+
+        let relPosition = screen.player.relDirectionOfPoint(pos.maze.x, pos.maze.y);
+        this.orientPos(pos, screen.player);
+        var map = new THREE.TextureLoader().load(src);
+        var material = new THREE.SpriteMaterial({ map: map, color: 0xffffff });
+        var sprite = new THREE.Sprite(material);
+        sprite.scale.set(window.innerWidth, window.innerHeight, 1);
+        this.scene.add(sprite);
+    }
 
     renderText(CTX, screen, text = "") {
         //this.drawBlock(CTX, "black", 0, 0, (window.innerWidth > window.innerHeight) ? window.innerWidth : window.innerHeight);
@@ -489,6 +525,7 @@ export class Render {
     renderMap(CTX, xOff, yOff, screen, map, orient = North, colorScheme = map_colors, cap = 10) {
         if (map.maze_perimiter < 10)
             cap = 4;
+        colorScheme = colors;
         CTX.save();
         let blockSize = screen.block;
         CTX.translate(screen.w - xOff, screen.h - yOff)
@@ -565,7 +602,9 @@ export class Render {
                 this.px + 10, this.py + 10, this.flashLightInnerRadius,
                 this.px, this.py, this.flashLightOutterRadius
             );
-            gradient.addColorStop(0, '#000000be');
+            gradient.addColorStop(0, '#20190a4e');
+            gradient.addColorStop(.25, '#20190a4f');
+            gradient.addColorStop(.30, '#20190a50');
             gradient.addColorStop(1, '#000000fe');
             CTX.fillStyle = gradient;
             CTX.fillRect(0, 0, window.innerWidth, window.innerHeight);
@@ -628,7 +667,7 @@ export class Render {
         }
     }
 
-    smoothness = 0.09 // 0 to 1 only
+    smoothness = 0.15 // 0 to 1 only
     WIDTH;
     HEIGHT;
     focousOnFloor(point = maxFlashlightRadius / 2) {
@@ -673,7 +712,7 @@ export class Render {
             () => {
                 this.cameraX = Math.PI / -2;
                 this.MoveCameraToPoint(-1, 0, 1)
-                return this.fogIn(1.95) && this.cameraInPosition() && this.reachedPoint(this.targetPosition, this.camera.position);
+                return this.fogIn(2) && this.cameraInPosition() && this.reachedPoint(this.targetPosition, this.camera.position);
             }
 
         ],
@@ -685,7 +724,7 @@ export class Render {
             () => {
                 this.cameraX = Math.PI / 2;
                 this.MoveCameraToPoint(1, 0, 1)
-                return this.fogIn(1.95) && this.cameraInPosition() && this.reachedPoint(this.targetPosition, this.camera.position);
+                return this.fogIn(2) && this.cameraInPosition() && this.reachedPoint(this.targetPosition, this.camera.position);
             }
         ],
         uturn: [
@@ -697,7 +736,7 @@ export class Render {
                 this.cameraX = Math.PI;
                 this.MoveCameraToPoint(0, 0, 0)
 
-                return this.shrinkFlashlight() && this.cameraInPosition() && this.reachedPoint(this.targetPosition, this.camera.position);
+                return this.fogIn(1) && this.cameraInPosition() && this.reachedPoint(this.targetPosition, this.camera.position);
             }
         ]
     };
@@ -732,7 +771,7 @@ export class Render {
         // renderer.render(scene, gltf.cameras[0]);
     }
 
-    loadMazeSection(obj, offX = 0, offY = 0, asset) {
+    loadMazeSection(obj, offX = 0, offY = 0, asset, rotation = 0) {
         var tex = (asset) ? new THREE.TextureLoader().load(asset) : null;
         if (tex)
             tex.flipY = false; // for glTF models.
@@ -752,15 +791,19 @@ export class Render {
         section.position.x = (offX * 2);
         section.position.z = -1 - (offY * 2);
 
+        if (rotation > 0)
+            section.rotation.y = rotation;
+
         //renderer.render(scene, gltf.cameras[0]);
     }
     transitionInstructions = [];
-     fogIn = (density) => {
+    fogIn = (density) => {
+        this.flashlightOn = false;
         //this.flashlightOn = false;
         this.scene.fog.density += .05;
         return this.scene.fog.density >= density;
     }
-     fogOut = (density) => {
+    fogOut = (density) => {
         //this.flashlightOn = true;
         this.scene.fog.density -= .05;
         return this.scene.fog.density <= density;
@@ -787,14 +830,16 @@ export class Render {
         this.transitionInstructions.push(() => {
             // if (this.py + maxFlashlightRadius / 2 > window.innerHeight / 2)
             //     this.py -= 20;
-            this.flashlightOn = true;
             this.camera.position.set(0, 0, 0);
             this.targetPosition.set(0, 0, 0);
             this.cameraX = 0;
             this.offsetX = 0;
             this.refeshing = false;
 
-            return this.fogOut(.45);
+            return this.fogOut(.45) && (() => {
+                this.flashlightOn = true;
+                return true;
+            })()
 
         });
     }
@@ -940,7 +985,7 @@ export class Render {
         this.scene.fog = new THREE.FogExp2(0x000000, .45);
 
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.add(new THREE.PointLight(0xdd9c22, .5));
+        this.camera.add(new THREE.PointLight(0xdd9c22, 1.5));
         this.targetPosition = this.camera.position.clone();
         screen.player = player;
 

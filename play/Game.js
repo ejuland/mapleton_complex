@@ -338,12 +338,12 @@ export default class Game {
     useItem1(e) {
         e.preventDefault();
         if (this.GAMESTATE.running)
-            this.itemManager.useItem(this.player1.item1, 1, this.CTX);
+            this.itemManager.useItem(this.player1.item1, 1,this.RenderEngine.assets, this.CTX);
     }
     useItem2(e) {
         e.preventDefault();
         if (this.GAMESTATE.running)
-            this.itemManager.useItem(this.player1.item2, 2, this.CTX);
+            this.itemManager.useItem(this.player1.item2, 2,this.RenderEngine.assets, this.CTX);
     }
 
     inMessage = false;
