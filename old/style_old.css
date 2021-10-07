@@ -1,0 +1,285 @@
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            display: block;
+            position: fixed;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+            background-image: url(./hro.jpg);
+            background-position: center;
+            background-color: #F8F4F1;
+            overflow-x: hidden;
+        }
+        
+        main {
+            overflow-y: auto;
+            overflow-x: hidden;
+            height: 100%;
+            backdrop-filter: blur(5px);
+        }
+        
+        .noverflow {
+            position: fixed;
+            overflow-y: visible;
+        }
+        
+        *::-webkit-scrollbar {
+            display: none;
+        }
+        
+        body {
+            scrollbar-width: 0;
+        }
+        
+        body,
+        main {}
+        
+        .page-header {
+            margin-top: 15%;
+            margin-bottom: 50%;
+            transition: margin 3s, opacity 3s, visibility 3s, display 3s;
+        }
+        
+        .page-header * {
+            color: #F8F4F1;
+            text-shadow: 3px 3px 0px #4a4e69;
+            width: 100%;
+            text-align: center;
+            transition: font-size 3s, opacity 3s;
+        }
+        
+        .hero-heading {
+            font-family: Copperplate, Copperplate Gothic Light, fantasy;
+            margin: auto;
+            text-align: center;
+            font-size: 90px;
+        }
+        
+        .hero-heading+p,
+        .link-container {
+            font-family: Copperplate, Copperplate Gothic Light, fantasy;
+            margin: auto;
+            width: 70%;
+            font-size: 24px;
+        }
+        
+        .link-container {
+            display: flex;
+            justify-content: space-evenly;
+            flex-direction: column;
+            width: 100%;
+            margin-top: 5%;
+        }
+        
+        .link-container * {
+            text-decoration: none;
+            padding: 2%;
+        }
+        
+        .page-header.collapsed {
+            margin-bottom: 2%;
+            /* border: 2px solid #F8F4F1;
+            opacity: .7; */
+        }
+        
+        .page-header.collapsed * {
+            /* color: #4a4e69; */
+            color: #F8F4F1;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .collapsed .hero-heading {
+            font-family: Copperplate, Copperplate Gothic Light, fantasy;
+            margin: auto;
+            text-align: center;
+            font-size: 40px;
+            transition: opacity 3s;
+        }
+        
+        .collapsed .hero-heading+p {
+            font-family: Copperplate, Copperplate Gothic Light, fantasy;
+            font-size: 12px;
+            margin: auto;
+            width: 100%
+        }
+        
+        .story-paragraph {
+            margin: auto;
+            color: #4a4e69;
+            font-family: Tahoma, Verdana, Segoe, sans-serif;
+            font-size: 24px;
+            width: 50%;
+        }
+        
+        .page-content {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            transition: opacity 2s, height 2s, margin 2s, visibility 2s;
+        }
+        
+        h2 {
+            color: #5d6283b4;
+            width: 100%;
+            font-size: 30px;
+            padding: 1%;
+            text-align: center;
+            font-family: Tahoma, Verdana, Segoe, sans-serif;
+        }
+        
+        h3 {
+            color: #412925a9;
+            font-family: Tahoma, Verdana, Segoe, sans-serif;
+        }
+        
+        .page-content article {
+            border-top: 10px solid #41292565;
+            background-color: #F1EAE4;
+            width: 100%;
+            overflow-x: hidden;
+            margin: auto;
+        }
+        
+        .nopacity {
+            opacity: 0;
+        }
+        
+        .gone {
+            display: none;
+        }
+        
+        .page-content .page-header {
+            margin-top: 5%;
+        }
+        
+        .hidden {
+            opacity: 0;
+            overflow-y: visible;
+            visibility: hidden;
+            margin: 0;
+            margin-top: 0% !important;
+            height: 0;
+            padding: 0;
+        }
+        
+        img {
+            max-width: 50%;
+        }
+        
+        .page-content img {
+            padding: 2%;
+        }
+        
+        .story-paragraph p {
+            padding: 2%;
+            color: #22223B;
+            text-align: justify;
+        }
+        
+        .story-paragraph {
+            border-bottom: 2px solid rgba(201, 200, 200, 0.329);
+        }
+        
+        .right {
+            float: right;
+            margin: 2.5%;
+        }
+        
+        .left {
+            float: left;
+            margin: 2.5%;
+        }
+        
+        .subtitle {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        @media screen and (max-width:1200px) {
+            .hero-heading {
+                font-size: 75px;
+            }
+            .hero-heading+p {
+                font-size: 17.5px;
+            }
+        }
+        
+        @media screen and (max-width:1000px) {
+            .hero-heading {
+                font-size: 60px;
+            }
+            .hero-heading+p {
+                font-size: 15.5px;
+            }
+        }
+        
+        @media screen and (max-width:800px) {
+            .hero-heading {
+                font-size: 50px;
+            }
+            .hero-heading+p {
+                font-size: 15.5px;
+            }
+        }
+        
+        @media screen and (max-width:400px) {
+            .subtitle {
+                flex-direction: column;
+                padding: 1%;
+            }
+            .subtitle * {
+                padding: 1%;
+            }
+            h2 {
+                color: #5d6283b4;
+                text-shadow: 1px 1px 1px #41292513;
+                width: 100%;
+                font-size: 26px;
+                text-align: center;
+                margin: 0;
+            }
+            h3 {
+                color: #412925a9;
+            }
+            .story-paragraph p {
+                padding: 2%;
+                font-size: 16px;
+            }
+            .page-content img {
+                max-width: 90%;
+            }
+            .img-container {
+                float: unset;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                flex-direction: row;
+            }
+            .story-paragraph {
+                width: 100%;
+                border-bottom: 2px solid rgba(201, 200, 200, 0.329);
+                display: flex;
+                justify-content: space-evenly;
+                flex-direction: column-reverse;
+            }
+            .page-content article article {
+                width: 100%;
+            }
+            .page-header {
+                margin-top: 60%;
+            }
+            .page-header.collapsed {}
+            .hero-heading {
+                font-size: 50px;
+            }
+            .hero-heading+p {
+                font-size: 20px;
+            }
+            .collapsed .hero-heading {
+                font-size: 30px;
+            }
+            .collapsed .hero-heading+p {
+                font-size: 9px;
+            }
+        }

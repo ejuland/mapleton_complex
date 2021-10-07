@@ -6,633 +6,126 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./favicon.ico">
+    <link rel="stylesheet" href="./style.css">
     <title>The Mapleton Complex</title>
-    <style>
-        html,
-        body {
-            height: 100%;
-            width: 100%;
-            display: block;
-            position: fixed;
-            overflow: hidden;
-            padding: 0;
-            margin: 0;
-            background-image: url(./hro.png);
-            background-position: center;
-            background-color: #F8F4F1;
-            overflow-x: hidden;
-
-        }
-
-        main {
-            overflow-y: auto;
-            overflow-x: hidden;
-            height: 100%;
-            backdrop-filter: blur(5px);
-
-        }
-
-        .noverflow {
-            position: fixed;
-            overflow-y: visible;
-        }
-
-        *::-webkit-scrollbar {
-            display: none;
-        }
-
-
-
-        body {
-            scrollbar-width: 0;
-
-        }
-
-        body,
-        main {}
-
-        .page-header {
-            margin-top: 15%;
-            margin-bottom: 50%;
-            transition: margin 3s, opacity 3s, visibility 3s, display 3s;
-
-        }
-
-        .page-header * {
-            color: #F8F4F1;
-            text-shadow: 3px 3px 0px #4a4e69;
-            width: 100%;
-            text-align: center;
-            transition: font-size 3s, opacity 3s;
-        }
-
-        .hero-heading {
-            font-family: Copperplate, Copperplate Gothic Light, fantasy;
-            margin: auto;
-            text-align: center;
-            font-size: 90px;
-
-        }
-
-        .hero-heading+p,
-        .link-container {
-            font-family: Copperplate, Copperplate Gothic Light, fantasy;
-            margin: auto;
-            width: 70%;
-            font-size: 24px;
-        }
-
-        .link-container {
-            display: flex;
-            justify-content: space-evenly;
-            flex-direction: column;
-            width: 100%;
-            margin-top: 5%;
-        }
-
-        .link-container * {
-            text-decoration: none;
-            padding: 2%;
-
-        }
-
-        .page-header.collapsed {
-            margin-bottom: 2%;
-            /* border: 2px solid #F8F4F1;
-            opacity: .7; */
-
-        }
-
-        .page-header.collapsed * {
-            /* color: #4a4e69; */
-            color: #F8F4F1;
-            width: 100%;
-            text-align: center;
-        }
-
-        .collapsed .hero-heading {
-            font-family: Copperplate, Copperplate Gothic Light, fantasy;
-            margin: auto;
-            text-align: center;
-            font-size: 40px;
-            transition: opacity 3s;
-        }
-
-        .collapsed .hero-heading+p {
-            font-family: Copperplate, Copperplate Gothic Light, fantasy;
-            font-size: 12px;
-            margin: auto;
-            width: 100%
-        }
-
-
-
-        .story-paragraph {
-            margin: auto;
-            color: #4a4e69;
-            font-family: Tahoma, Verdana, Segoe, sans-serif;
-            font-size: 24px;
-            width: 50%;
-
-        }
-
-        .page-content {
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            transition: opacity 2s, height 2s, margin 2s, visibility 2s;
-        }
-
-        h2 {
-            color: #5d6283b4;
-            width: 100%;
-            font-size: 30px;
-            padding: 1%;
-            text-align: center;
-            font-family: Tahoma, Verdana, Segoe, sans-serif;
-
-        }
-
-        h3 {
-            color: #412925a9;
-            font-family: Tahoma, Verdana, Segoe, sans-serif;
-
-        }
-
-        .page-content article {
-            border-top: 10px solid #41292565;
-            background-color: #F1EAE4;
-            width: 100%;
-            overflow-x: hidden;
-            margin: auto;
-        }
-
-        .nopacity {
-            opacity: 0;
-        }
-
-        .gone {
-            display: none;
-        }
-
-        .page-content .page-header {
-            margin-top: 5%;
-        }
-
-        .hidden {
-            opacity: 0;
-            overflow-y: visible;
-            visibility: hidden;
-            margin: 0;
-            margin-top: 0% !important;
-            height: 0;
-            padding: 0;
-        }
-
-        img {
-            max-width: 50%;
-        }
-
-        .page-content img {
-            padding: 2%;
-
-        }
-
-        .story-paragraph p {
-            padding: 2%;
-            color: #22223B;
-            text-align: justify;
-        }
-
-        .story-paragraph {
-            border-bottom: 2px solid rgba(201, 200, 200, 0.329);
-        }
-
-        .right {
-            float: right;
-            margin: 2.5%;
-        }
-
-        .left {
-            float: left;
-            margin: 2.5%;
-        }
-
-        .subtitle {
-            display: flex;
-            justify-content: space-between;
-        }
-
-
-
-
-        @media screen and (max-width:1200px) {
-            .hero-heading {
-                font-size: 75px;
-            }
-
-            .hero-heading+p {
-                font-size: 17.5px;
-            }
-        }
-
-        @media screen and (max-width:1000px) {
-            .hero-heading {
-                font-size: 60px;
-            }
-
-            .hero-heading+p {
-                font-size: 15.5px;
-            }
-        }
-
-        @media screen and (max-width:800px) {
-            .hero-heading {
-                font-size: 50px;
-            }
-
-            .hero-heading+p {
-                font-size: 15.5px;
-            }
-        }
-
-        @media screen and (max-width:400px) {
-            .subtitle {
-                flex-direction: column;
-                padding: 1%;
-            }
-
-            .subtitle * {
-                padding: 1%;
-            }
-
-            h2 {
-                color: #5d6283b4;
-                text-shadow: 1px 1px 1px #41292513;
-                width: 100%;
-                font-size: 26px;
-                text-align: center;
-                margin: 0;
-            }
-
-            h3 {
-                color: #412925a9;
-            }
-
-            .story-paragraph p {
-                padding: 2%;
-                font-size: 16px;
-            }
-
-            .page-content img {
-                max-width: 90%;
-            }
-
-            .img-container {
-                float: unset;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                flex-direction: row;
-            }
-
-            .story-paragraph {
-                width: 100%;
-                border-bottom: 2px solid rgba(201, 200, 200, 0.329);
-                display: flex;
-                justify-content: space-evenly;
-                flex-direction: column-reverse;
-            }
-
-            .page-content article article {
-                width: 100%;
-            }
-
-            .page-header {
-                margin-top: 60%;
-            }
-
-            .page-header.collapsed {}
-
-            .hero-heading {
-                font-size: 50px;
-            }
-
-            .hero-heading+p {
-                font-size: 20px;
-            }
-
-            .collapsed .hero-heading {
-                font-size: 30px;
-            }
-
-            .collapsed .hero-heading+p {
-                font-size: 9px;
-
-            }
-        }
-    </style>
 </head>
 
-<body class="">
-    <main id="content" class="">
-        <section class="page-header">
-            <h1 class="hero-heading">The Mapleton Complex</h1>
-            <p class="subtitle"><span class="sub-option">Save your friend</span> <span class="sub-option">Solve the
-                    mystery</span> <span class="sub-option">Live to tell the tale</span></p>
-            <div class="link-container">
-                <a href="./play" target="_blank" rel="noopener noreferrer">Play the
-                    Game</a>
-                <a href="#prologue" class="scroll-prompt" rel="noopener noreferrer">Scroll to learn more</a>
-            </div>
+<body>
+    <main>
+        <header class="content-section">
+            <h1>The Mapleton Complex</h1>
+            <sub>Save Your Friend &bull; Solve the Mystery &bull; Live to Tell the Story</sub>
+            <a href="/play">Play the Game</a>
+            <p class="scroll-prompt">scroll to learn more</p>
+        </header>
+        <section class="content-section section-1">
+            <p class="story-text">
+                It has been over two weeks since you have last seen him. Knowing him, he would have brought enough supplies to survive twice as long. This wasn’t the first time he disappeared off the radar for this long, but it has never felt this foreboding. The last
+                time you heard from him, he said he was going back to the site. Why was he so obsessed with the place? In your opinion, it was nothing more than a remote pile of rubble which has served as a gathering spot for miscreants despite the warnings
+                and trespassing signs.
+
+            </p>
         </section>
-        <section class="page-content hidden">
-            <section class="page-header collapsed nopacity">
-                <h1 class="hero-heading ">The Mapleton Complex</h1>
-                <p>Save your friend &bull; Solve the mystery &bull; Live to tell the tale</p>
-            </section>
-            <article>
-                <h2 id="prologue">Prologue</h2>
-                <div class="story-paragraph">
-                    <div class="img-container">
-                        <img class="right"
-                            src="https://images.unsplash.com/photo-1627756508516-751ccf5500ac?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                            alt="">
-                    </div>
-                    <p>
-                        It has been over two weeks since you have last seen him. Knowing him, he would have brought
-                        enough
-                        supplies
-                        to survive twice as long. This wasn’t the first time he disappeared off the radar for this long,
-                        but
-                        it
-                        has
-                        never felt this foreboding. The last time you heard from him, he said he was going back to the
-                        site.
-                        Why
-                        was
-                        he so obsessed with the place? In your opinion, it was nothing more than a remote pile of rubble
-                        which
-                        has
-                        served as a gathering spot for miscreants despite the warnings and trespassing signs.
-                    </p>
-                </div>
-                <div class="story-paragraph">
-                    <div class="img-container">
-                        <img class="left" src="./image2.png" alt="">
-                    </div>
-                    <p>
-
-                        He always insisted that there was more to it than that. “Consider the size!” he would interjet
-                        any
-                        time
-                        you
-                        tried to convince him of the place’s insignificance. Though you didn’t want to admit it, he had
-                        a
-                        fair
-                        point. According to local legend, the place had employed hundreds of workers in the late 40’s
-                        with
-                        the
-                        purpose of developing technology to support the war effort. However, less than a decade after
-                        its
-                        establishment, the facility was vacated and left desolate for years ever since. Every time you
-                        went
-                        with
-                        him, you couldn’t help but feel that the place was unusually small considering all of the rumors
-                        and
-                        lore
-                        surrounding it.
-                    </p>
-                </div>
-                <div class="story-paragraph">
-                    <div class="img-container">
-                        <img class="right"
-                            src="https://images.unsplash.com/photo-1601570634862-483703ee8f6d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=376&q=80"
-                            alt="">
-                    </div>
-                    <p>
-
-                        The facility was located north of the city deep within the forest. You would have easily missed
-                        the
-                        trail
-                        leading to the site if he hadn’t pointed it out to you. Off the side of one of the mountain's
-                        switch
-                        backs
-                        was a faded dirt trail just wide enough for a small truck to fit. The trail made a steep descent
-                        down
-                        the
-                        side of the mountain and ran alongside the river. After following the trail deeper into the
-                        forest,
-                        you
-                        would eventually begin to see the warning signs telling you to “turn back”, “trespassers will be
-                        prosecuted”
-                        and more messages with the likes of that. The messages however were never enforced. The
-                        government
-                        obviously
-                        had more important places to focus on.
-                    </p>
-                </div>
-                <div class="story-paragraph">
-                    <div class="img-container">
-                        <img class="left"
-                            src="https://images.unsplash.com/photo-1628593304384-0fd03f85c4d7?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDF8fG1pbmV8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                            alt="">
-                    </div>
-                    <p>
-
-                        When you got to the site itself, you couldn’t help but wonder how a large operation could have
-                        existed
-                        here.
-                        Undoubtedly there had been a government presence here. The most notable thing about the site was
-                        the
-                        disused
-                        rail tracks which ran around the perimeter. It was apparent that the place was used for some
-                        mining
-                        operations long ago. You could still see some of the neglected equipment rusting by the side of
-                        the
-                        mountain. Apart from that, there was limited evidence of the government's occupation. All that
-                        remained
-                        was
-                        a guard station, a toppled watch tower, and a few concrete walls on a foundation no larger than
-                        a
-                        small
-                        gas
-                        station. You had scoured the place on many occasions, but never found anything more significant
-                        than
-                        graffiti, some mouse droppings, and shattered glass. Despite all of this your friend still had a
-                        fondness of
-                        the place which bordered pure obsession.
-                    </p>
-                </div>
-                <div class="story-paragraph">
-                    <div class="img-container">
-                        <img class="right"
-                            src="https://images.unsplash.com/photo-1583494140651-fed8e8467d9e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
-                            alt="">
-                    </div>
-                    <p>
-                        “That’s why I'm here”, you think to yourself as you step out of your truck. As the cool dusk air
-                        brushes
-                        across your face, you can’t help but feel a little more relaxed. Under normal circumstances you
-                        would be
-                        tempted to stay the night just to enjoy the peaceful environment that the mountain provides.
-                        However,
-                        just
-                        as you predicted, you notice that your friend had parked in his usual spot. Relieved, you draw
-                        closer to
-                        his
-                        vehicle knowing that he usually sleeps in the back. When you arrive, you notice something
-                        peculiar.
-                        Instead
-                        of his normal sleeping gear, the bed of his truck is filled with rudimentary excavation
-                        equipment.
-                        As
-                        you
-                        scan the site you observe that many parts of the foundation have been broken into pieces. It is
-                        getting
-                        dark
-                        now, so you reach into the bed of his truck and grab gloves and a flashlight from the haphazard
-                        pile
-                        of
-                        tools lying in the back.
-                    </p>
-                </div>
-                <div class="story-paragraph">
-                    <div class="img-container">
-                        <img class="left"
-                            src="https://images.unsplash.com/photo-1517172770828-dd2c3b6db6b0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
-                            alt="">
-                    </div>
-                    <p>
-
-                        Night has fallen by the time you approach the site and you see a faint warm glow reflecting off
-                        one
-                        of
-                        the
-                        walls near the center of the facility. As you draw near the wall, you can clearly make out a
-                        man-sized
-                        hole
-                        which appears to be the source of the soft glow. Your attention is caught by a long rope
-                        anchored to
-                        the
-                        wall which descends into the hole. As you look down you are surprised to find that the hole goes
-                        down
-                        far
-                        deeper than you expected. It could easily be a thirty-foot descent to the bottom of the palace.
-                        You
-                        try
-                        yelling down into the pit, but you get no response. Praying you don’t find your friend in a
-                        mangled
-                        heap
-                        at
-                        the bottom, you don your gloves, inspect the anchor, tug on the rope a few times for good
-                        measure,
-                        and
-                        proceed to repel down into the pit.
-                    </p>
-                </div>
-                <div class="story-paragraph">
-                    <div class="img-container">
-                        <img class="right" src="./elevator.png" alt="">
-                    </div>
-                    <p>
-
-                        As you reach the bottom, you are confused to find that the light source was not your friend. In
-                        fact,
-                        the
-                        only trace of him was the rope that he left behind. The light source came from what appeared to
-                        be
-                        an
-                        old
-                        freight elevator. As you debate whether to investigate further you are startled by the sound of
-                        the
-                        rope
-                        hitting the ground with a heavy thud behind you. You infer that the anchor had come undone. You
-                        take
-                        a
-                        moment to compose yourself and then decide to investigate the elevator further. You reason that
-                        your
-                        friend
-                        couldn’t be too far ahead of you. You step through the open doors and find a brass panel to your
-                        right
-                        with
-                        two vertically-aligned buttons. Wishing that your friend is on a higher floor, you attempt to
-                        press
-                        the
-                        top
-                        button to no avail. After many futile attempts, you feel a gowing weight in your stomach as you
-                        realize
-                        that
-                        your only hope of finding your friend and getting back up is by going down. You take a deep
-                        breath
-                        and
-                        reach
-                        for the bottom button…
-                    </p>
-                </div>
-            </article>
+        <section class="content-section section-2">
+            <p class="story-text">
+                He always insisted that there was more to it than that. “Consider the size!” he would interjet any time you tried to convince him of the place’s insignificance. Though you didn’t want to admit it, he had a fair point. According to local legend, the place
+                had employed hundreds of workers in the late 40’s with the purpose of developing technology to support the war effort. However, less than a decade after its establishment, the facility was vacated and left desolate for years ever since.
+                Every time you went with him, you couldn’t help but feel that the place was unusually small considering all of the rumors and lore surrounding it.
+            </p>
         </section>
+        <section class="content-section section-3">
+            <p class="story-text">
+                The facility was located north of the city deep within the forest. You would have easily missed the trail leading to the site if he hadn’t pointed it out to you. Off the side of one of the mountain's switch backs was a faded dirt trail just wide enough
+                for a small truck to fit. The trail made a steep descent down the side of the mountain and ran alongside the river. After following the trail deeper into the forest, you would eventually begin to see the warning signs telling you to “turn
+                back”, “trespassers will be prosecuted” and more messages with the likes of that. The messages however were never enforced. The government obviously had more important places to focus on.
+            </p>
+        </section>
+        <section class="content-section section-4">
+            <p class="story-text">
+                When you got to the site itself, you couldn’t help but wonder how a large operation could have existed here. Undoubtedly there had been a government presence here. The most notable thing about the site was the disused rail tracks which ran around the
+                perimeter. It was apparent that the place was used for some mining operations long ago. You could still see some of the neglected equipment rusting by the side of the mountain. Apart from that, there was limited evidence of the government's
+                occupation. All that remained was a guard station, a toppled watch tower, and a few concrete walls on a foundation no larger than a small gas station. You had scoured the place on many occasions, but never found anything more significant
+                than graffiti, some mouse droppings, and shattered glass. Despite all of this your friend still had a fondness of the place which bordered pure obsession.
+            </p>
+        </section>
+        <section class="content-section section-5">
+            <p class="story-text">
+                “That’s why I'm here”, you think to yourself as you step out of your truck. As the cool dusk air brushes across your face, you can’t help but feel a little more relaxed. Under normal circumstances you would be tempted to stay the night just to enjoy the
+                peaceful environment that the mountain provides. However, just as you predicted, you notice that your friend had parked in his usual spot. Relieved, you draw closer to his vehicle knowing that he usually sleeps in the back. When you arrive,
+                you notice something peculiar. Instead of his normal sleeping gear, the bed of his truck is filled with rudimentary excavation equipment. As you scan the site you observe that many parts of the foundation have been broken into pieces.
+                It is getting dark now, so you reach into the bed of his truck and grab gloves and a flashlight from the haphazard pile of tools lying in the back.
+            </p>
+        </section>
+        <section class="content-section section-6">
+            <p class="story-text">
+                Night has fallen by the time you approach the site and you see a faint warm glow reflecting off one of the walls near the center of the facility. As you draw near the wall, you can clearly make out a man-sized hole which appears to be the source of the
+                soft glow. Your attention is caught by a long rope anchored to the wall which descends into the hole. As you look down you are surprised to find that the hole goes down far deeper than you expected. It could easily be a thirty-foot descent
+                to the bottom of the palace. You try yelling down into the pit, but you get no response. Praying you don’t find your friend in a mangled heap at the bottom, you don your gloves, inspect the anchor, tug on the rope a few times for good
+                measure, and proceed to repel down into the pit.
+            </p>
+        </section>
+        <section class="content-section section-7">
+            <p>
+
+                As you reach the bottom, you are confused to find that the light source was not your friend. In fact, the only trace of him was the rope that he left behind. The light source came from what appeared to be an old freight elevator. As you debate whether
+                to investigate further you are startled by the sound of the rope hitting the ground with a heavy thud behind you. You infer that the anchor had come undone. You take a moment to compose yourself and then decide to investigate the elevator
+                further. You reason that your friend couldn’t be too far ahead of you. You step through the open doors and find a brass panel to your right with two vertically-aligned buttons. Wishing that your friend is on a higher floor, you attempt
+                to press the top button to no avail. After many futile attempts, you feel a gowing weight in your stomach as you realize that your only hope of finding your friend and getting back up is by going down. You take a deep breath and reach
+                for the bottom button…
+            </p>
+        </section>
+        <section class="content-section article-end">
+            <a href="/play" class="play-now">Play Now</a>
+            <a href="" class="how-to-play">How to Play</a>
+            <a href="" class="about-us">About Us</a>
+        </section>
+
     </main>
     <script>
-        let headerCollapsed = false;
-        let loaded = true;
-        document.getElementsByClassName("page-header")[0].ontransitionend = () => {
-            if (headerCollapsed) {
-                document.getElementsByClassName("page-header")[1].classList.remove("nopacity")
+        const sections = 7;
+        for (let i = 1; i <= sections; i++) {
+            document.querySelector(".section-" + i).classList.remove("section-" + i);
+        }
+        const gallery = [
+            "https://images.unsplash.com/photo-1542448953-d8d53cb64ab9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
+            "https://images.unsplash.com/photo-1546527868-ccb7ee7dfa6a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+            "https://images.unsplash.com/photo-1519681393784-d120267933ba?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8bW91bnRhaW58ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "https://images.unsplash.com/photo-1542397284385-6010376c5337?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8Ym9hdHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "https://images.unsplash.com/photo-1484154218962-a197022b5858?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fGhvdXNlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "https://images.unsplash.com/photo-1453614512568-c4024d13c247?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Y29mZmVlJTIwc2hvcHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bGFrZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+        ];
+        // Reference: http://www.html5rocks.com/en/tutorials/speed/animations/
 
+        let lastKnownScrollPosition = 0;
+        let ticking = false;
+        let lastTilePos = 0;
+
+        function doSomething(scrollPos) {
+            // Do something with the scroll position
+            let tilePosition = (Math.floor(((scrollPos + (window.innerHeight / 2)) / window.innerHeight)));
+            if (tilePosition !== lastTilePos && tilePosition <= sections) {
+                document.getElementsByTagName("html")[0].classList.remove("section-" + (lastTilePos));
+                document.getElementsByTagName("html")[0].classList.add("section-" + tilePosition)
+                console.log(tilePosition);
             }
+            lastTilePos = tilePosition;
 
-        };
-        document.getElementsByClassName("page-header")[1].ontransitionend = () => {
-            if (!headerCollapsed)
-                document.getElementsByClassName("page-header")[0].classList.remove("hidden")
-            else {
-                main.classList.remove("noverflow");
-                loaded = true;
+        }
+
+        document.getElementsByTagName("main")[0].addEventListener('scroll', function(e) {
+            lastKnownScrollPosition = document.getElementsByTagName("main")[0].scrollTop;
+
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    doSomething(lastKnownScrollPosition);
+                    ticking = false;
+                });
+
+                ticking = true;
             }
-
-        };
-        let supportsPassive = false
-        try {
-            window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
-                get: function () { supportsPassive = true; }
-            }));
-        } catch (e) { }
-        let main = document.getElementsByTagName("main")[0];
-        main.addEventListener("scroll", (e) => {
-            let scroll = document.getElementsByTagName("main")[0].scrollTop;
-            console.log(loaded, scroll, e)
-            if (!loaded) {
-                console.log("too far pal");
-                return e.preventDefault();
-            }
-
-
-
-            if (scroll > 20 && !headerCollapsed) {
-                loaded = false;
-                headerCollapsed = true;
-                document.getElementsByClassName("page-header")[0].classList.add("hidden")
-                document.getElementsByClassName("page-content")[0].classList.remove("hidden")
-                main.classList.add("noverflow");
-
-
-
-            } else if (headerCollapsed && loaded && scroll <= 0) {
-                headerCollapsed = false
-                loaded = true;
-                document.getElementsByClassName("page-content")[0].classList.add("hidden")
-                document.getElementsByClassName("page-header")[1].classList.add("nopacity")
-                document.getElementsByClassName("page-header")[0].classList.remove("hidden")
-                main.classList.remove("noverflow");
-
-
-
-            }
-        }, supportsPassive ? { passive: false } : false);
-        setTimeout(() => {
-            // document.getElementsByClassName("page-header")[0].classList.add("collapsed")
-            // document.getElementsByClassName("page-header")[0].onscroll
-            // document.getElementsByClassName("page-content")[0].classList.remove("hidden")
-        }, 2000)
+        });
     </script>
 </body>
 
